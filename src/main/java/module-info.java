@@ -3,7 +3,7 @@ module fr.battleship.battleshipfx {
     requires javafx.fxml;
             
                             
-    opens fr.battleship.battleshipfx to javafx.fxml;
-    opens fr.battleship.battleshipfx.Controller;
-    exports fr.battleship.battleshipfx;
+    opens fr.battleshipfx to javafx.fxml;
+    opens fr.battleshipfx.Controller;
+    exports fr.battleshipfx;
 }

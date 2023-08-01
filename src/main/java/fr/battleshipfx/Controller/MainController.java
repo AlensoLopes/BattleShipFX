@@ -1,15 +1,14 @@
-package fr.battleship.battleshipfx.Controller;
+package fr.battleshipfx.Controller;
 
-import fr.battleship.battleshipfx.BattleShip;
-import javafx.beans.binding.Bindings;
-import javafx.event.EventType;
+import fr.battleshipfx.BattleShip;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,11 +21,12 @@ public class MainController implements Initializable {
     private TextField pseudo;
     @FXML private Button jouer;
 
-    private String pseudonyme;
 
-    private Stage stage;
+    private static String pseudonyme;
 
-    private GameController gameController;
+    private final Stage stage;
+
+    private final GameController gameController;
 
     public MainController(Stage stage) {
         this.stage = stage;
@@ -50,7 +50,7 @@ public class MainController implements Initializable {
 
     }
 
-    public String getPseudonyme() {
+    public static String getPseudonyme() {
         return pseudonyme;
     }
 }

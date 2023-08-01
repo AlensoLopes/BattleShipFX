@@ -1,6 +1,6 @@
-package fr.battleship.battleshipfx;
+package fr.battleshipfx;
 
-import fr.battleship.battleshipfx.Controller.MainController;
+import fr.battleshipfx.Controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

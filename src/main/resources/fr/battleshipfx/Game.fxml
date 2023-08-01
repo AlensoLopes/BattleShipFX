@@ -14,9 +14,9 @@
 <?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="fr.battleship.battleshipfx.Controller.GameController">
+fx:controller="fr.battleshipfx.Controller.GameController" fx:id="background">
    <center>
-      <Pane BorderPane.alignment="CENTER">
+      <Pane BorderPane.alignment="CENTER" fx:id="center">
          <children>
             <GridPane fx:id="board">
               <columnConstraints>
@@ -30,15 +30,15 @@ fx:controller="fr.battleship.battleshipfx.Controller.GameController">
       </Pane>
    </center>
    <left>
-      <VBox alignment="CENTER_LEFT" prefWidth="100.0" style="-fx-background-color: #ddd;" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER_LEFT" prefWidth="100.0" style="-fx-background-color: #ddd;" BorderPane.alignment="CENTER" fx:id="left">
          <children>
             <ScrollPane prefHeight="600.0" prefWidth="100.0" />
          </children></VBox>
    </left>
    <right>
-      <VBox alignment="TOP_CENTER" prefWidth="200.0" style="-fx-background-color: #ddd;" BorderPane.alignment="CENTER">
+      <VBox alignment="TOP_CENTER" prefWidth="200.0" style="-fx-background-color: #ddd;" BorderPane.alignment="CENTER" fx:id="right">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Player" wrappingWidth="71.98620462417603">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Player" wrappingWidth="71.98620462417603" fx:id="pseudo">
                <font>
                   <Font size="18.0" />
                </font>
@@ -57,10 +57,10 @@ fx:controller="fr.battleship.battleshipfx.Controller.GameController">
                     </rowConstraints>
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Coordinates" />
-                        <TextField prefHeight="26.0" prefWidth="106.0" promptText="Coord : (x;y)" GridPane.columnIndex="1" />
+                        <TextField prefHeight="26.0" prefWidth="106.0" promptText="Coord : (x;y)" GridPane.columnIndex="1" fx:id="coord" />
                      </children>
                   </GridPane>
-                  <Button layoutX="74.0" layoutY="88.0" mnemonicParsing="false" text="Valider" />
+                  <Button layoutX="74.0" layoutY="88.0" mnemonicParsing="false" text="Valider" fx:id="validation"/>
                </children>
             </Pane>
          </children>
