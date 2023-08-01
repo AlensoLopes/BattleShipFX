@@ -9,7 +9,6 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -17,6 +16,7 @@ import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class GameController implements Initializable {
     
@@ -28,11 +28,12 @@ public class GameController implements Initializable {
     @FXML private Text pseudo;
     @FXML protected TextField coord;
     @FXML protected Button validation;
+    @FXML protected TextField axis;
     
     private MainController controller;
     private PlaceShipController placeShipController;
 
-    private static final int SIZE = 10;
+    private static final int SIZE = 11;
     private static final int SIZE_CELL = 44;
     public String[][] board_game;
 
@@ -55,11 +56,23 @@ public class GameController implements Initializable {
         validation.disableProperty().bind(coord.textProperty().isEmpty());
 
         validation.setOnAction(actionEvent ->{
-            int[] coordo = placeShipController.placeShip();
-            DisplayBoard displayBoard = new DisplayBoard();
-            displayBoard.displayBoard(board_game);
-            updateBoard(coordo[0], coordo[1], 2, "V", "medium");
+            try{
+                String[] coordo = placeShipController.placeShip();
+                if(coordo != null){
+                    DisplayBoard displayBoard = new DisplayBoard();
+                    displayBoard.displayBoard(board_game);
+                    placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
+                    updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
+                            Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
+                }
+            }catch (ArrayIndexOutOfBoundsException e){
+                System.out.println(e.getMessage());
+            }
         });
+    }
+
+    private boolean processPlaceShip(String response){
+        return response == null;
     }
 
     private void createBoard(){
@@ -114,25 +127,44 @@ public class GameController implements Initializable {
         this.controller = controller;
     }
 
+    public MainController getController() {
+        return controller;
+    }
+
     private void updateBoard(int x, int y, int size, String sens, String type){
-        if(sens.equals("V")){
-            int c = y;
-            for (int i = 0; i < size; i++) {
-                for (Node node : board.getChildren()) {
-                    if (node instanceof Label
-                            && GridPane.getColumnIndex(node) == x
-                            && GridPane.getRowIndex(node) == c) {
-                        ((Label)node).setText(type.toUpperCase());
-                        switch (type){
-                            case "small" -> ((Label)node).setBackground(SMALL);
-                            case "medium" -> ((Label)node).setBackground(MEDIUM);
-                            case "large" -> ((Label)node).setBackground(LARGE);
-                            case "larger" -> ((Label)node).setBackground(LARGER);
-                        }
-                    }
-                }
-                c++;
-            }
+        boolean v = processAxis(sens);
+
+        int x_axis = x;
+        int y_axis = y;
+
+        for (int i = 0; i < size; i++) {
+            createLabelFromInput(searchNode(x_axis,y_axis), type);
+            if(v)y_axis++;
+            else x_axis++;
         }
+    }
+
+    private boolean processAxis(String sens){
+        return sens.equals("V");
+    }
+
+    private Node searchNode(int x, int y){
+        AtomicReference<Node> nodeAtomicReference = new AtomicReference<>();
+        board.getChildren().forEach(node -> {
+            if(node instanceof Label
+            && GridPane.getColumnIndex(node) == x
+            && GridPane.getRowIndex(node) == y) nodeAtomicReference.set(node);
+        });
+        return nodeAtomicReference.get();
+    }
+
+    private void createLabelFromInput(Node node, String type){
+        switch (type){
+            case "small" -> ((Label)node).setBackground(SMALL);
+            case "medium" -> ((Label)node).setBackground(MEDIUM);
+            case "large" -> ((Label)node).setBackground(LARGE);
+            case "larger" -> ((Label)node).setBackground(LARGER);
+        }
+        ((Label)node).setText(type.toUpperCase());
     }
 }
