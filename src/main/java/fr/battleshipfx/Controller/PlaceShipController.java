@@ -1,10 +1,12 @@
 package fr.battleshipfx.Controller;
 
 import fr.battleship.Listeners.Warship;
+import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Ship.Armoured;
 import fr.battleship.Ship.Cruiser;
 import fr.battleship.Ship.Submarine;
 import fr.battleship.Ship.Torpedo;
+import fr.battleshipfx.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +31,8 @@ public class PlaceShipController {
     }
 
     public String[] placeShip(){
-        if(!canShipBePlaced()){
-            return null;
-        }
-
-        int[] coord = processCoordinate();
+        if(!canShipBePlaced()) return null;
+        int[] coord = Utils.processCoordinate(controller.coord);
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
         if(size == -1) return null;
 
@@ -49,11 +48,11 @@ public class PlaceShipController {
         }
         return false;
     }
-    private int[] processCoordinate(){
+    /*private int[] processCoordinate(){
         return new int[]{
                 Integer.parseInt(controller.coord.getText().split(";")[0]),
                 Integer.parseInt(controller.coord.getText().split(";")[1])};
-    }
+    }*/
 
     private String getAxis(){
         return controller.axis.getText();

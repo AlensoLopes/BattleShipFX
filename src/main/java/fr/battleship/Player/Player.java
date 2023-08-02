@@ -24,6 +24,12 @@ public abstract class Player {
     protected abstract boolean shoot(String[][] array);
     protected abstract boolean shoot(int x, int y, String[][] array);
 
+    public int getNbSuccessShoot(){
+        return nbSuccessShoot;
+    }
 
+    public int getNbTotalShoot(){
+        return nbTotalShoot;
+    }
 
 }

@@ -26,6 +26,10 @@ public class PlayerHuman extends Player{
         playerName = name;
     }
 
+    public void setPlayerName(String s){
+        playerName = s;
+    }
+
     public String getPlayerName(){
         return playerName;
     }
@@ -101,6 +105,15 @@ public class PlayerHuman extends Player{
         if(array[x][y].equals(style)) array[x][y] = " ";
     }
 
+    @Override
+    public int getNbSuccessShoot() {
+        return super.getNbSuccessShoot();
+    }
+
+    @Override
+    public int getNbTotalShoot() {
+        return super.getNbTotalShoot();
+    }
 
     /*Below : old version of the destroy ship*/
 

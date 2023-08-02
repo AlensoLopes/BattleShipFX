@@ -13,10 +13,12 @@ import java.util.*;
 public class Bot extends Player {
 
     public ArrayList<Integer> botHit = new ArrayList<>();
+    public int[] coordHit = new int[2];
 
     public Bot() {
         setPlayerName();
     }
+
 
     public int getNbShipAlive(String[][] board) {
         return PlayerHuman.getNbShipAlive(board);
@@ -124,10 +126,17 @@ public class Bot extends Player {
                 isGood = false;
             }
         }
+        coordHit[0] = x;
+        coordHit[1] = y;
         return shoot(x, y, array);
     }
 
     private static int getDigitFromNumber(int number, int start, int end){
         return Integer.parseInt(Integer.toString(number).substring(start, end));
+    }
+
+    @Override
+    public int getNbSuccessShoot() {
+        return super.getNbSuccessShoot();
     }
 }

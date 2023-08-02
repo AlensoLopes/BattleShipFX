@@ -2,6 +2,10 @@ package fr.battleshipfx.Controller;
 
 import fr.battleship.Board.CreateBoard;
 import fr.battleship.Board.DisplayBoard;
+import fr.battleship.Player.Bot;
+import fr.battleship.Player.PlayerHuman;
+import fr.battleship.Win.Win;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -15,6 +19,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
+import java.nio.charset.MalformedInputException;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -32,38 +37,79 @@ public class GameController implements Initializable {
     
     private MainController controller;
     private PlaceShipController placeShipController;
+    private ShootController shootController;
+    private BotController botController;
 
     private static final int SIZE = 11;
     private static final int SIZE_CELL = 44;
     public String[][] board_game;
+    public String[][] board_bot;
+    protected PlayerHuman playerHuman;
+    protected Bot bot;
+
+    private int nb_turn = 0;
 
     private static final Background START = new Background(new BackgroundFill(Color.WHITE, null, null));
     protected static final Background SMALL = new Background(new BackgroundFill(Color.RED, null, null));
     protected static final Background MEDIUM = new Background(new BackgroundFill(Color.AQUA, null, null));
     protected static final Background LARGE = new Background(new BackgroundFill(Color.AQUAMARINE, null, null));
     protected static final Background LARGER = new Background(new BackgroundFill(Color.BLUE, null, null));
+    protected static final Background DEAD = new Background(new BackgroundFill(Color.DARKRED, null, null));
+
+    public GameController() {
+        this.placeShipController = new PlaceShipController();
+        this.shootController = new ShootController();
+        botController = new BotController();
+        playerHuman = new PlayerHuman();
+        bot = new Bot();
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        placeShipController = new PlaceShipController();
         placeShipController.setController(this);
+        shootController.setGameController(this);
+        botController.setGameController(this);
+
         board.prefHeightProperty().bind(center.heightProperty());
         board.prefWidthProperty().bind(center.widthProperty());
 
         createBoard();
-        board_game = new CreateBoard().createBoard();
         pseudo.setText(pseudo.getText() + " : " + MainController.getPseudonyme());
-        validation.disableProperty().bind(coord.textProperty().isEmpty());
+
+
+        axis.disableProperty().bind(coord.textProperty().isEmpty());
+        validation.disableProperty().bind(axis.textProperty().isEmpty());
+        if(!placeShipController.boatPlaced[0]){
+            axis.setVisible(false);
+            axis.setText("V");
+        }
+
+        startGame();
 
         validation.setOnAction(actionEvent ->{
             try{
                 String[] coordo = placeShipController.placeShip();
+                DisplayBoard displayBoard = new DisplayBoard();
+
                 if(coordo != null){
-                    DisplayBoard displayBoard = new DisplayBoard();
                     displayBoard.displayBoard(board_game);
                     placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
+                    if(placeShipController.boatPlaced[0]) axis.setVisible(true);
+
                     updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
                             Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
+                    axis.clear();
+                }
+                if(placeShipController.boatPlaced[3]){
+                    axis.setVisible(false);
+                    validation.disableProperty().unbind();
+                    validation.disableProperty().bind(coord.textProperty().isEmpty());
+                    proccessTurn();
+                    proccessTurn();
+                    proccessTurn();
+                    proccessTurn();
+                    proccessTurn();
+                    displayBoard.displayBoard(board_game);
                 }
             }catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(e.getMessage());
@@ -71,8 +117,26 @@ public class GameController implements Initializable {
         });
     }
 
-    private boolean processPlaceShip(String response){
-        return response == null;
+    private void startGame(){
+        board_game = new CreateBoard().createBoard();
+        board_bot = new CreateBoard().createBoard();
+        playerHuman.setPlayerName(MainController.getPseudonyme());
+        bot.placeShipBot(board_bot);
+    }
+
+    private void proccessTurn(){
+        nb_turn++;
+        int shoot = shootController.shootBoat(board_bot);
+        //coord.clear();
+
+        if(shoot == -1) System.out.println("Erreur");
+        int shootBot = botController.shootBot(board_game);
+        if(shootBot == 1) proccessBotSuccess();
+    }
+
+    private void proccessBotSuccess(){
+        Label label = (Label) searchNode(bot.coordHit[0], bot.coordHit[1]);
+        label.setBackground(DEAD);
     }
 
     private void createBoard(){
@@ -132,20 +196,14 @@ public class GameController implements Initializable {
     }
 
     private void updateBoard(int x, int y, int size, String sens, String type){
-        boolean v = processAxis(sens);
-
         int x_axis = x;
         int y_axis = y;
 
         for (int i = 0; i < size; i++) {
             createLabelFromInput(searchNode(x_axis,y_axis), type);
-            if(v)y_axis++;
+            if(sens.equals("V")) y_axis++;
             else x_axis++;
         }
-    }
-
-    private boolean processAxis(String sens){
-        return sens.equals("V");
     }
 
     private Node searchNode(int x, int y){
