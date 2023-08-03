@@ -105,11 +105,12 @@ public class GameController implements Initializable {
                     validation.disableProperty().unbind();
                     validation.disableProperty().bind(coord.textProperty().isEmpty());
                     proccessTurn();
-                    proccessTurn();
-                    proccessTurn();
-                    proccessTurn();
-                    proccessTurn();
                     displayBoard.displayBoard(board_game);
+                    if(Win.getWinner(board_game, board_bot, bot, playerHuman)){
+                        validation.disableProperty().unbind();
+                        validation.setDisable(true);
+                        coord.setDisable(true);
+                    }
                 }
             }catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(e.getMessage());
@@ -127,7 +128,7 @@ public class GameController implements Initializable {
     private void proccessTurn(){
         nb_turn++;
         int shoot = shootController.shootBoat(board_bot);
-        //coord.clear();
+        coord.clear();
 
         if(shoot == -1) System.out.println("Erreur");
         int shootBot = botController.shootBot(board_game);
@@ -135,7 +136,7 @@ public class GameController implements Initializable {
     }
 
     private void proccessBotSuccess(){
-        Label label = (Label) searchNode(bot.coordHit[0], bot.coordHit[1]);
+        Label label = (Label) searchNode(bot.coordHit[0] + 1, bot.coordHit[1] + 1);
         label.setBackground(DEAD);
     }
 
@@ -163,7 +164,7 @@ public class GameController implements Initializable {
             label.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, null, null)));
             board.add(label, i, 0);
 
-            label = new Label(String.valueOf(Character.valueOf((char) (96 + i))));
+            label = new Label(String.valueOf(Character.valueOf((char) (96 + i))).toUpperCase());
             label.setTextAlignment(TextAlignment.CENTER);
             label.setPrefSize(SIZE_CELL, SIZE_CELL);
             label.setAlignment(Pos.CENTER);
@@ -175,14 +176,14 @@ public class GameController implements Initializable {
     private void fillBoard(){
         for (int i = 1; i < SIZE; i++) {
             for (int j = 1; j < SIZE; j++) {
-                Label label = new Label("("+i+";"+j+")");
+                Label label = new Label(String.valueOf(Character.valueOf((char) (96+i))).toUpperCase() + j);
                 label.setPrefSize(SIZE_CELL, SIZE_CELL);
                 label.setBackground(START);
                 label.setTextFill(Color.BLACK);
                 label.setTextAlignment(TextAlignment.CENTER);
                 label.setAlignment(Pos.CENTER);
 
-                board.add(label, i, j);
+                board.add(label, j, i);
             }
         }
     }
@@ -201,8 +202,8 @@ public class GameController implements Initializable {
 
         for (int i = 0; i < size; i++) {
             createLabelFromInput(searchNode(x_axis,y_axis), type);
-            if(sens.equals("V")) y_axis++;
-            else x_axis++;
+            if(sens.equals("V")) x_axis++;
+            else y_axis++;
         }
     }
 
@@ -210,8 +211,8 @@ public class GameController implements Initializable {
         AtomicReference<Node> nodeAtomicReference = new AtomicReference<>();
         board.getChildren().forEach(node -> {
             if(node instanceof Label
-            && GridPane.getColumnIndex(node) == x
-            && GridPane.getRowIndex(node) == y) nodeAtomicReference.set(node);
+            && GridPane.getColumnIndex(node) == y
+            && GridPane.getRowIndex(node) == x) nodeAtomicReference.set(node);
         });
         return nodeAtomicReference.get();
     }

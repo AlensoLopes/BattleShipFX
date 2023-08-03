@@ -5,7 +5,8 @@ import javafx.scene.control.TextField;
 public class Utils {
 
     public static int[] processCoordinate(TextField textField){
-            return new int[]{Integer.parseInt(textField.getText().split(";")[0]),
-                    Integer.parseInt(textField.getText().split(";")[1])};
+        int a = textField.getText().toLowerCase().charAt(0) - 97;
+        int b = Integer.parseInt(textField.getText().substring(1)) - 1;
+        return new int[]{a,b};
     }
 }

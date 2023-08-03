@@ -33,10 +33,11 @@ public class PlaceShipController {
     public String[] placeShip(){
         if(!canShipBePlaced()) return null;
         int[] coord = Utils.processCoordinate(controller.coord);
+
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
         if(size == -1) return null;
 
-        return new String[]{String.valueOf(coord[0]), String.valueOf(coord[1]), String.valueOf(size),
+        return new String[]{String.valueOf(coord[0] + 1), String.valueOf(coord[1] + 1), String.valueOf(size),
                 getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
     }
 

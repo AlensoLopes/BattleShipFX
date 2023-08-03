@@ -14,6 +14,7 @@ public class Bot extends Player {
 
     public ArrayList<Integer> botHit = new ArrayList<>();
     public int[] coordHit = new int[2];
+    protected String playerName;
 
     public Bot() {
         setPlayerName();
@@ -32,14 +33,14 @@ public class Bot extends Player {
             ArrayList<String> text = Utils.getTextFromFile(f);
 
             int nb = r.nextInt(text.size());
-            playerName = text.get(nb);
+            this.playerName = text.get(nb);
         }catch (Exception e){
-            playerName = "Bot";
+            this.playerName = "Bot";
         }
     }
 
     public String getBotName() {
-        return playerName;
+        return this.playerName;
     }
 
 
