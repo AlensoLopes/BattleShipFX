@@ -39,43 +39,45 @@ public class Warship extends DisplayBoard{
         }
     }
 
-    public void placeSmallShip(int x, int y, Submarine s, String[][] array, boolean bot) {
+    public boolean placeSmallShip(int x, int y, Submarine s, String[][] array, boolean bot) {
         String type = "S";
-        if (lockCheckWithType(type)) return;
+        if (lockCheckWithType(type)) return false;
         if(!((x >= 0 && x < DIM) && (y >= 0 && y < DIM) &&
                 (Objects.equals(array[x][y], " ")))){
             errorPlaceShip(x, y, array, type, bot);
-            return;
+            return false;
         }
         array[x][y] = s.style;
         lock.add("S");
         /*displayBoard(array);*/
+        return true;
     }
 
-    public void placeMediumShip(int x, int y, String sens, Torpedo t, String[][] array, boolean bot){
+    public boolean placeMediumShip(int x, int y, String sens, Torpedo t, String[][] array, boolean bot){
         String type = "M";
-        callPlaceShip(x, y, t.getSize(), sens, t.getStyle(), array, type, bot);
+        return callPlaceShip(x, y, t.getSize(), sens, t.getStyle(), array, type, bot);
     }
 
-    public void placeLargeShip(int x, int y, String sens,
+    public boolean placeLargeShip(int x, int y, String sens,
                                Cruiser c, String[][] array, boolean bot){
         String type = "L";
-        callPlaceShip(x, y, c.getSize(), sens, c.getStyle(), array, type, bot);
+        return callPlaceShip(x, y, c.getSize(), sens, c.getStyle(), array, type, bot);
     }
 
-    public void placeLargiestShip(int x, int y, String sens,
+    public boolean placeLargiestShip(int x, int y, String sens,
                                   Armoured a, String[][] array, boolean bot){
         String type = "La";
-        callPlaceShip(x, y, a.getSize(), sens, a.getStyle(), array, type, bot);
+        return callPlaceShip(x, y, a.getSize(), sens, a.getStyle(), array, type, bot);
     }
 
-    private void callPlaceShip(int x, int y, int size, String sens,
+    private boolean callPlaceShip(int x, int y, int size, String sens,
                                String style, String[][] array, String type, boolean bot){
-        if (lockCheckWithType(type)) return;
+        if (lockCheckWithType(type)) return false;
         boolean e = checkError(x, y, size, sens, array);
         place_check_vertical(x, y, sens, size, e, style, array, type, bot);
         place_check_horizontal(x, y, sens, size, e, style, array, type);
         /*displayBoard(array);*/
+        return e;
     }
 
     private void shipLock(){

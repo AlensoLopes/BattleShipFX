@@ -5,7 +5,6 @@ import fr.battleship.Board.DisplayBoard;
 import fr.battleship.Player.Bot;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -19,7 +18,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
-import java.nio.charset.MalformedInputException;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -36,9 +34,9 @@ public class GameController implements Initializable {
     @FXML protected TextField axis;
     
     private MainController controller;
-    private PlaceShipController placeShipController;
-    private ShootController shootController;
-    private BotController botController;
+    private final PlaceShipController placeShipController;
+    private final ShootController shootController;
+    private final BotController botController;
 
     private static final int SIZE = 11;
     private static final int SIZE_CELL = 44;
@@ -77,15 +75,22 @@ public class GameController implements Initializable {
         createBoard();
         pseudo.setText(pseudo.getText() + " : " + MainController.getPseudonyme());
 
+        axis.setVisible(false);
+        axis.setText("V");
+        validation.disableProperty().bind(coord.textProperty().isEmpty());
 
-        axis.disableProperty().bind(coord.textProperty().isEmpty());
-        validation.disableProperty().bind(axis.textProperty().isEmpty());
-        if(!placeShipController.boatPlaced[0]){
-            axis.setVisible(false);
-            axis.setText("V");
-        }
 
         startGame();
+
+        coord.textProperty().addListener((observableValue, s, t1) -> {
+            if(!s.matches("[a-zA-Z0-9]*") || s.length() > 2) coord.setStyle("-fx-text-fill: red");
+            else coord.setStyle("-fx-text-fill: black");
+        });
+
+        axis.textProperty().addListener((observableValue, s, t1) -> {
+            if(!s.matches("[a-zA-Z]*") || s.length() > 1) axis.setStyle("-fx-text-fill: red");
+            else axis.setStyle("-fx-text-fill: black");
+        });
 
         validation.setOnAction(actionEvent ->{
             try{
@@ -95,7 +100,12 @@ public class GameController implements Initializable {
                 if(coordo != null){
                     displayBoard.displayBoard(board_game);
                     placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
-                    if(placeShipController.boatPlaced[0]) axis.setVisible(true);
+                    if(placeShipController.boatPlaced[0]){
+                        axis.setVisible(true);
+                        validation.textProperty().unbind();
+                        axis.disableProperty().bind(coord.textProperty().isEmpty());
+                        validation.disableProperty().bind(axis.textProperty().isEmpty());
+                    }
 
                     updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
                             Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
@@ -194,10 +204,6 @@ public class GameController implements Initializable {
     
     public void setController(MainController controller) {
         this.controller = controller;
-    }
-
-    public MainController getController() {
-        return controller;
     }
 
     private void updateBoard(int x, int y, int size, String sens, String type){

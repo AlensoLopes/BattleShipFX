@@ -1,16 +1,12 @@
 package fr.battleshipfx.Controller;
 
 import fr.battleship.Listeners.Warship;
-import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Ship.Armoured;
 import fr.battleship.Ship.Cruiser;
 import fr.battleship.Ship.Submarine;
 import fr.battleship.Ship.Torpedo;
 import fr.battleshipfx.Utils.Utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
 
 
 public class PlaceShipController {
@@ -18,7 +14,7 @@ public class PlaceShipController {
     private GameController controller;
     protected boolean[] boatPlaced;
     protected int nbBoat;
-    private Warship warship;
+    private final Warship warship;
 
     public PlaceShipController() {
         boatPlaced = new boolean[]{false, false, false, false};
@@ -81,25 +77,17 @@ public class PlaceShipController {
     }
 
     private int placeBoat(int[] coord, int index, String sens){
+        boolean placed = false;
         if(index == -1) return -1;
         switch(index){
-            case 0 -> warship.placeSmallShip(coord[0], coord[1], new Submarine(), controller.board_game, false);
-            case 1 -> warship.placeMediumShip(coord[0], coord[1], sens, new Torpedo(), controller.board_game, false);
-            case 2 -> warship.placeLargeShip(coord[0], coord[1], sens, new Cruiser(), controller.board_game, false);
-            case 3 -> warship.placeLargiestShip(coord[0], coord[1], sens, new Armoured(), controller.board_game, false);
+            case 0 -> placed = warship.placeSmallShip(coord[0], coord[1], new Submarine(), controller.board_game, false);
+            case 1 -> placed = warship.placeMediumShip(coord[0], coord[1], sens, new Torpedo(), controller.board_game, false);
+            case 2 -> placed = warship.placeLargeShip(coord[0], coord[1], sens, new Cruiser(), controller.board_game, false);
+            case 3 -> placed = warship.placeLargiestShip(coord[0], coord[1], sens, new Armoured(), controller.board_game, false);
         }
+
+        if(!placed) return -1;
         controller.coord.clear();
         return index+1;
     }
-
-    private boolean isButtonCorrect(){
-        return controller.coord.getText().contains(";");
-    }
-
-    protected void disableButton(){
-        if(!controller.coord.getText().startsWith("(") && !controller.coord.getText().endsWith(")")) controller.validation.setDisable(true);
-    }
-
-
-
 }
