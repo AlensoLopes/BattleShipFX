@@ -37,6 +37,16 @@ public class PlaceShipController {
                 getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
     }
 
+    public String[] placeShipOnClick(int x, int y){
+        if(!canShipBePlaced()) return null;
+        int[] coord = new int[]{x,y};
+        int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
+        if(size == -1) return null;
+
+        return new String[]{String.valueOf(coord[0] + 1), String.valueOf(coord[1] + 1), String.valueOf(size),
+                getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
+    }
+
     private boolean canShipBePlaced(){
         for (boolean b : boatPlaced) {
             if (!b) {

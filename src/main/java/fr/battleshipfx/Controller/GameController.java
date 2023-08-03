@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -127,6 +128,34 @@ public class GameController implements Initializable {
                 System.out.println(e.getMessage());
             }
         });
+
+
+
+        for(Node node : board.getChildren()){
+            if(node instanceof Label
+            && GridPane.getRowIndex(node) > 0
+            && GridPane.getColumnIndex(node) > 0){
+                node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+                    String[] coordo = placeShipController.placeShipOnClick(GridPane.getRowIndex(node) -1, GridPane.getColumnIndex(node)-1);
+                    DisplayBoard displayBoard = new DisplayBoard();
+
+                    if(coordo != null){
+                        displayBoard.displayBoard(board_game);
+                        placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
+                        if(placeShipController.boatPlaced[0]){
+                            axis.setVisible(true);
+                            validation.textProperty().unbind();
+                            axis.disableProperty().bind(coord.textProperty().isEmpty());
+                            validation.disableProperty().bind(axis.textProperty().isEmpty());
+                        }
+
+                        updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
+                                Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
+                        axis.clear();
+                    }
+                });
+            }
+        }
     }
 
     private void startGame(){
