@@ -5,6 +5,7 @@ import fr.battleship.Board.DisplayBoard;
 import fr.battleship.Player.Bot;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -12,6 +13,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -19,6 +21,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -129,14 +132,29 @@ public class GameController implements Initializable {
             }
         });
 
-
-
         for(Node node : board.getChildren()){
+
             if(node instanceof Label
             && GridPane.getRowIndex(node) > 0
             && GridPane.getColumnIndex(node) > 0){
                 node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                    String[] coordo = placeShipController.placeShipOnClick(GridPane.getRowIndex(node) -1, GridPane.getColumnIndex(node)-1);
+                    TextInputDialog dialog = new TextInputDialog();
+                    Optional<String> res;
+                    boolean good = false;
+                    dialog.setTitle("Select your axis");
+
+                    if(placeShipController.boatPlaced[0]){
+                        dialog.getEditor().textProperty().addListener((observableValue, s, t1) -> {
+                            if(!s.matches("[a-zA-Z]*") || s.length() > 1) dialog.getEditor().setStyle("-fx-text-fill: red");
+                            else dialog.getEditor().setStyle("-fx-text-fill: black");
+                        });
+                        res = dialog.showAndWait();
+                        while(!good){
+                            if(res.get().equalsIgnoreCase("V") || res.get().equalsIgnoreCase("H"))good = true;
+                            else res = dialog.showAndWait();
+                        }
+                    }
+                    String[] coordo = placeShipController.placeShipOnClick(GridPane.getRowIndex(node) -1, GridPane.getColumnIndex(node)-1, dialog.getEditor().getText());
                     DisplayBoard displayBoard = new DisplayBoard();
 
                     if(coordo != null){
@@ -156,6 +174,14 @@ public class GameController implements Initializable {
                 });
             }
         }
+
+
+        /*
+         * TODO
+         *  CLEAN CODE PLACE MANUAL
+         *  CLEAN CODE PLACE AUTO
+         *  BUG DISPLAY FIRST SHOOT AFTER PLACE ON CLICK
+         * */
     }
 
     private void startGame(){

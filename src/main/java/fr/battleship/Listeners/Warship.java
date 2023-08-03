@@ -58,6 +58,21 @@ public class Warship extends DisplayBoard{
         return callPlaceShip(x, y, t.getSize(), sens, t.getStyle(), array, type, bot);
     }
 
+    public boolean placeMediumShip(int[] coord, Torpedo t, String[][] array){
+        String type = "M";
+        for(int i = 0; i<t.size; i+=2){
+            for (int j = i+1; j < size; j++) {
+                if (lockCheckWithType(type)) return false;
+                if(!((coord[i] >= 0 && coord[i] < DIM) && (coord[j] >= 0 && coord[j] < DIM) &&
+                        (Objects.equals(array[coord[i]][coord[j]], " ")))){
+                    errorPlaceShip(coord[i], coord[j], array, type, false);
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     public boolean placeLargeShip(int x, int y, String sens,
                                Cruiser c, String[][] array, boolean bot){
         String type = "L";
