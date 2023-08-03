@@ -15,8 +15,10 @@ public class ShootController {
         int shootSucceed = gameController.playerHuman.getNbSuccessShoot();
         gameController.playerHuman.shoot(coord[0], coord[1], board);
         if(gameController.playerHuman.getNbSuccessShoot() > shootSucceed){
+            gameController.updateBoardLabel(coord[0] + 1, coord[1] + 1, GameController.HIT, "HIT");
             return 1;
         }else if(gameController.playerHuman.getNbSuccessShoot() == shootSucceed){
+            gameController.updateBoardLabel(coord[0] + 1, coord[1] + 1, GameController.NOTHIT, "NOT HIT");
             return 0;
         }
         return -1;

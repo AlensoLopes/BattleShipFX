@@ -55,7 +55,8 @@ public class GameController implements Initializable {
     protected static final Background LARGE = new Background(new BackgroundFill(Color.AQUAMARINE, null, null));
     protected static final Background LARGER = new Background(new BackgroundFill(Color.BLUE, null, null));
     protected static final Background DEAD = new Background(new BackgroundFill(Color.DARKRED, null, null));
-
+    protected static final Background HIT = new Background(new BackgroundFill(Color.DARKGREEN, null, null));
+    protected static final Background NOTHIT = new Background(new BackgroundFill(Color.GREEN, null, null));
     public GameController() {
         this.placeShipController = new PlaceShipController();
         this.shootController = new ShootController();
@@ -132,12 +133,15 @@ public class GameController implements Initializable {
 
         if(shoot == -1) System.out.println("Erreur");
         int shootBot = botController.shootBot(board_game);
-        if(shootBot == 1) proccessBotSuccess();
+        if(shootBot == 1) updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
     }
 
-    private void proccessBotSuccess(){
-        Label label = (Label) searchNode(bot.coordHit[0] + 1, bot.coordHit[1] + 1);
-        label.setBackground(DEAD);
+
+    protected void updateBoardLabel(int x, int y, Background background, String text){
+        Label label = (Label) searchNode(x, y);
+        label.setBackground(background);
+        if(text == null) label.setText(label.getText());
+        else label.setText(text);
     }
 
     private void createBoard(){
