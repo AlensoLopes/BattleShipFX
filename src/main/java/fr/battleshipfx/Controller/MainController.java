@@ -24,12 +24,12 @@ public class MainController implements Initializable {
 
     private static String pseudonyme;
 
-    private final Stage stage;
+    protected static Stage stage;
 
     private final GameController gameController;
 
     public MainController(Stage stage) {
-        this.stage = stage;
+        MainController.stage = stage;
         gameController = new GameController();
     }
 

@@ -11,7 +11,10 @@ public class ShootController {
     }
 
     public int shootBoat(String[][] board){
-        int[] coord = Utils.processCoordinate(gameController.coord);
+        return shootBoat(board, Utils.processCoordinate(gameController.coord));
+    }
+
+    public int shootBoat(String[][] board, int[] coord){
         int shootSucceed = gameController.playerHuman.getNbSuccessShoot();
         gameController.playerHuman.shoot(coord[0], coord[1], board);
         if(gameController.playerHuman.getNbSuccessShoot() > shootSucceed){

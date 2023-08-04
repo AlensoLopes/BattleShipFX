@@ -5,21 +5,24 @@ import fr.battleship.Board.DisplayBoard;
 import fr.battleship.Player.Bot;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
+import fr.battleshipfx.BattleShip;
+import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.WeakEventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -143,7 +146,7 @@ public class GameController implements Initializable {
                     boolean good = false;
                     dialog.setTitle("Select your axis");
 
-                    if(placeShipController.boatPlaced[0]){
+                    if(placeShipController.boatPlaced[0] && !placeShipController.boatPlaced[3]){
                         dialog.getEditor().textProperty().addListener((observableValue, s, t1) -> {
                             if(!s.matches("[a-zA-Z]*") || s.length() > 1) dialog.getEditor().setStyle("-fx-text-fill: red");
                             else dialog.getEditor().setStyle("-fx-text-fill: black");
@@ -154,6 +157,7 @@ public class GameController implements Initializable {
                             else res = dialog.showAndWait();
                         }
                     }
+
                     String[] coordo = placeShipController.placeShipOnClick(GridPane.getRowIndex(node) -1, GridPane.getColumnIndex(node)-1, dialog.getEditor().getText());
                     DisplayBoard displayBoard = new DisplayBoard();
 
@@ -170,8 +174,50 @@ public class GameController implements Initializable {
                         updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
                                 Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
                         axis.clear();
+                    }else if(placeShipController.boatPlaced[3] && !Win.getWinner(board_game, board_bot, bot, playerHuman)){
+                        axis.setVisible(false);
+                        validation.disableProperty().unbind();
+                        validation.disableProperty().bind(coord.textProperty().isEmpty());
+                        proccessTurn(new int[]{GridPane.getRowIndex(node)-1, GridPane.getColumnIndex(node) -1});
+                        displayBoard.displayBoard(board_game);
+
+                    }else{
+                        if(Win.getWinner(board_game, board_bot, bot, playerHuman)){
+                            validation.disableProperty().unbind();
+                            validation.setDisable(true);
+                            coord.setDisable(true);
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Do you want to start a new game ?");
+                            ButtonType newGameWithSameName = new ButtonType("Yes with the same name");
+                            ButtonType newGameWithotherName = new ButtonType("Yes but with another name");
+                            ButtonType stop = new ButtonType("NO");
+                            alert.getButtonTypes().setAll(newGameWithSameName, newGameWithotherName, stop);
+                            alert.showAndWait().ifPresent(response -> {
+                                if(response == newGameWithSameName) {
+                                    startGame();
+                                    FXMLLoader fxmlLoader = new FXMLLoader(BattleShip.class.getResource("Game.fxml"));
+                                    try {
+                                        MainController.stage.getScene().setRoot(fxmlLoader.load());
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                } else if(response == newGameWithotherName){
+                                    stopGame();
+                                    MainController mainController = new MainController(MainController.stage);
+                                    FXMLLoader fxmlLoader = new FXMLLoader(BattleShip.class.getResource("Main.fxml"));
+                                    fxmlLoader.setController(mainController);
+                                    try {
+                                        MainController.stage.getScene().setRoot(fxmlLoader.load());
+                                    } catch (IOException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }else{
+                                    MainController.stage.close();
+                                }
+                            });
+                        }
                     }
                 });
+
             }
         }
 
@@ -191,10 +237,24 @@ public class GameController implements Initializable {
         bot.placeShipBot(board_bot);
     }
 
+    private void stopGame(){
+        board = null;
+        board_bot = null;
+    }
+
     private void proccessTurn(){
         nb_turn++;
         int shoot = shootController.shootBoat(board_bot);
         coord.clear();
+
+        if(shoot == -1) System.out.println("Erreur");
+        int shootBot = botController.shootBot(board_game);
+        if(shootBot == 1) updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
+    }
+
+    private void proccessTurn(int[] coord){
+        nb_turn++;
+        int shoot = shootController.shootBoat(board_bot, coord);
 
         if(shoot == -1) System.out.println("Erreur");
         int shootBot = botController.shootBot(board_game);
