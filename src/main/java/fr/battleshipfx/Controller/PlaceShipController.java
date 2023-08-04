@@ -17,7 +17,10 @@ public class PlaceShipController {
     private final Warship warship;
 
     public PlaceShipController() {
-        boatPlaced = new boolean[]{false, false, false, false};
+        boatPlaced = new boolean[Warship.nb_ship];
+        for (int i = 0; i < Warship.nb_ship; i++) {
+            boatPlaced[i] = false;
+        }
         warship = new Warship();
         nbBoat =0;
     }
@@ -55,11 +58,6 @@ public class PlaceShipController {
         }
         return false;
     }
-    /*private int[] processCoordinate(){
-        return new int[]{
-                Integer.parseInt(controller.coord.getText().split(";")[0]),
-                Integer.parseInt(controller.coord.getText().split(";")[1])};
-    }*/
 
     private String getAxis(){
         return controller.axis.getText();
