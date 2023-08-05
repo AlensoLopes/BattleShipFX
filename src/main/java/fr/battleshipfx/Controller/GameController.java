@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class GameController implements Initializable {
@@ -38,6 +39,7 @@ public class GameController implements Initializable {
     @FXML protected TextField coord;
     @FXML protected Button validation;
     @FXML protected TextField axis;
+    @FXML protected FlowPane pane;
     
     private MainController controller;
     protected final PlaceShipController placeShipController;
@@ -102,9 +104,22 @@ public class GameController implements Initializable {
 
     protected void placeShipAndDisplay(String[] coordo){
         if(coordo == null){
+            Label label = new Label("An error occured, unplaced boat ! ");
+            label.setStyle("-fx-text-fill: red");
+            pane.getChildren().add(label);
             return;
         }
         displayBoard.displayBoard(board_game);
+
+
+        if(!placeShipController.boatPlaced[0]){
+            pane.getChildren().addAll(new Label("Boat placed : "), new Label(placeShipController.boatName.getName() + " in ("
+                    + (char) (97 + Integer.parseInt(coordo[0]) - 1) + coordo[1] + ')'));
+        }else{
+            pane.getChildren().add(new Label(placeShipController.boatName.getName() + " in ("
+                    + (char) (97 + (Integer.parseInt(coordo[0]) - 1)) + coordo[1] + ')' + " Axis : " + placeShipController.getAxis()));
+        }
+
         placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
         if(placeShipController.boatPlaced[0]){
             axis.setVisible(true);
@@ -248,7 +263,6 @@ public class GameController implements Initializable {
                 placeShipAndDisplay(placeShipController.placeShip());
                 doShootAndDisplay(null);
                 processWin();
-
             }catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(e.getMessage());
             }

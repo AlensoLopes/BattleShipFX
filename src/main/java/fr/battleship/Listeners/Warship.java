@@ -159,4 +159,6 @@ public class Warship extends DisplayBoard{
         return no_error == size;
     }
 
+    public String getName(){return null;}
+
 }

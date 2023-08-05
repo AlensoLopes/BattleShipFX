@@ -15,4 +15,5 @@ public class Submarine extends Warship {
     public int getSize() {
         return this.size;
     }
+    public String getName(){return "Submarine";}
 }

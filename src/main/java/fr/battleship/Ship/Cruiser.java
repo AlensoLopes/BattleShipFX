@@ -14,4 +14,5 @@ public class Cruiser extends Warship {
     public int getSize() {
         return this.size;
     }
+    public String getName(){return "Cruiser";}
 }

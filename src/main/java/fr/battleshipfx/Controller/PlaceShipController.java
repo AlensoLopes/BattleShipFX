@@ -6,7 +6,10 @@ import fr.battleship.Ship.Cruiser;
 import fr.battleship.Ship.Submarine;
 import fr.battleship.Ship.Torpedo;
 import fr.battleshipfx.Utils.Utils;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 
+import java.text.Format;
 
 
 public class PlaceShipController {
@@ -15,6 +18,7 @@ public class PlaceShipController {
     protected boolean[] boatPlaced;
     protected int nbBoat;
     private final Warship warship;
+    protected Warship boatName;
 
     public PlaceShipController() {
         boatPlaced = new boolean[Warship.nb_ship];
@@ -32,9 +36,11 @@ public class PlaceShipController {
     public String[] placeShip(){
         if(!canShipBePlaced()) return null;
         int[] coord = Utils.processCoordinate(controller.coord);
+        if(coord == null) return new String[]{null};
 
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
         if(size == -1) return null;
+
 
         return new String[]{String.valueOf(coord[0] + 1), String.valueOf(coord[1] + 1), String.valueOf(size),
                 getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
@@ -59,7 +65,7 @@ public class PlaceShipController {
         return false;
     }
 
-    private String getAxis(){
+    protected String getAxis(){
         return controller.axis.getText();
     }
 
@@ -88,10 +94,14 @@ public class PlaceShipController {
         boolean placed = false;
         if(index == -1) return -1;
         switch(index){
-            case 0 -> placed = warship.placeSmallShip(coord[0], coord[1], new Submarine(), controller.board_game, false);
-            case 1 -> placed = warship.placeMediumShip(coord[0], coord[1], sens, new Torpedo(), controller.board_game, false);
-            case 2 -> placed = warship.placeLargeShip(coord[0], coord[1], sens, new Cruiser(), controller.board_game, false);
-            case 3 -> placed = warship.placeLargiestShip(coord[0], coord[1], sens, new Armoured(), controller.board_game, false);
+            case 0 -> placed = warship.placeSmallShip(coord[0], coord[1], (Submarine) (boatName =new Submarine()),
+                    controller.board_game, false);
+            case 1 -> placed = warship.placeMediumShip(coord[0], coord[1], sens, (Torpedo) (boatName = new Torpedo()),
+                    controller.board_game, false);
+            case 2 -> placed = warship.placeLargeShip(coord[0], coord[1], sens, (Cruiser) (boatName = new Cruiser()),
+                    controller.board_game, false);
+            case 3 -> placed = warship.placeLargiestShip(coord[0], coord[1], sens, (Armoured) (boatName = new Armoured()),
+                    controller.board_game, false);
         }
 
         if(!placed) return -1;
