@@ -11,6 +11,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class PlayerHuman extends Player{
+    public static int[] entireShip = new int[2];
 
     public PlayerHuman() {
     }
@@ -82,13 +83,22 @@ public class PlayerHuman extends Player{
         destroyShip(x, y, array, style);
         if(numberOfThisShip(array, style) == 0 && !bot){
             System.out.println("You destroy the entire ship !");
+            entireShip[0] = 1;
             return;
         }else if (numberOfThisShip(array, style) == 0 && bot){
             System.out.println("Bot destroy the entire ship !");
+            entireShip[1] = 1;
             return;
         }
-        if(!bot) System.out.println("You don't have destroy the entire ship !");
-        else System.out.println("Bot don't have destroy the entire ship !");
+        if(!bot){
+            System.out.println("You haven't have destroy the entire ship !");
+            entireShip[0] = 0;
+
+        }
+        else{
+            System.out.println("Bot don't have destroy the entire ship !");
+            entireShip[1] = 0;
+        }
     }
 
     private static int numberOfThisShip(String[][] array, String style){

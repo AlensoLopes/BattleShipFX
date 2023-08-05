@@ -39,7 +39,7 @@ public class GameController implements Initializable {
     @FXML protected TextField coord;
     @FXML protected Button validation;
     @FXML protected TextField axis;
-    @FXML protected FlowPane pane;
+    @FXML public FlowPane pane;
     
     private MainController controller;
     protected final PlaceShipController placeShipController;
@@ -52,7 +52,7 @@ public class GameController implements Initializable {
     public String[][] board_game;
     public String[][] board_bot;
     protected PlayerHuman playerHuman;
-    protected Bot bot;
+    public Bot bot;
     private DisplayBoard displayBoard;
 
     private int nb_turn = 0;
@@ -102,23 +102,14 @@ public class GameController implements Initializable {
 
 
 
-    protected void placeShipAndDisplay(String[] coordo){
-        if(coordo == null){
-            Label label = new Label("An error occured, unplaced boat ! ");
-            label.setStyle("-fx-text-fill: red");
-            pane.getChildren().add(label);
-            return;
-        }
+    protected boolean placeShipAndDisplay(String[] coordo){
+        if(coordo == null) return false;
+        if(!addHistoryOnError(coordo, "unplaced boat")) return false;
         displayBoard.displayBoard(board_game);
 
 
-        if(!placeShipController.boatPlaced[0]){
-            pane.getChildren().addAll(new Label("Boat placed : "), new Label(placeShipController.boatName.getName() + " in ("
-                    + (char) (97 + Integer.parseInt(coordo[0]) - 1) + coordo[1] + ')'));
-        }else{
-            pane.getChildren().add(new Label(placeShipController.boatName.getName() + " in ("
-                    + (char) (97 + (Integer.parseInt(coordo[0]) - 1)) + coordo[1] + ')' + " Axis : " + placeShipController.getAxis()));
-        }
+        addHistoryOnPlace(coordo);
+
 
         placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
         if(placeShipController.boatPlaced[0]){
@@ -131,6 +122,45 @@ public class GameController implements Initializable {
         boardController.updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
                 Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
         axis.clear();
+        return true;
+    }
+
+    protected void addHistoryOnPlace(String[] coordo){
+        if(!placeShipController.boatPlaced[0]){
+            pane.getChildren().addAll(new Label("Boat placed : "), new Label(placeShipController.boatName.getName() + " in ("
+                    + (char) (97 + Integer.parseInt(coordo[0]) - 1) + coordo[1] + ')'));
+        }else{
+            pane.getChildren().add(new Label(placeShipController.boatName.getName() + " in ("
+                    + (char) (97 + (Integer.parseInt(coordo[0]) - 1)) + coordo[1] + ')'));
+        }
+    }
+    protected void addHistoryOnShoot(int[] coordo, boolean hit, boolean bot){
+        if(hit && !bot){
+            pane.getChildren().addAll( new Label(playerHuman.getPlayerName() + " hit a boat in ("
+                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
+            allBoatDestroy();
+        }else if(!hit && !bot){
+            pane.getChildren().add(new Label(playerHuman.getPlayerName() + " failed his shoot in ("
+                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
+        }else if(hit && bot){
+            pane.getChildren().add(new Label(this.bot.getBotName() + " hit a boat in ("
+                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
+            allBoatDestroy();
+        }else{
+            pane.getChildren().add(new Label(this.bot.getBotName() + " failed his shoot in ("
+                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
+        }
+
+    }
+
+    protected boolean addHistoryOnError(String[] coordo, String text){
+        if(coordo[0] == null){
+            Label label = new Label("An error occured, " + text + " ! ");
+            label.setStyle("-fx-text-fill: red");
+            pane.getChildren().add(label);
+            return false;
+        }
+        return true;
     }
 
     protected void doShootAndDisplay(int[] coord){
@@ -202,7 +232,6 @@ public class GameController implements Initializable {
                 else res = dialog.showAndWait();
             }
         }
-
         return dialog.getEditor().getText();
     }
 
@@ -220,21 +249,46 @@ public class GameController implements Initializable {
 
     protected void proccessTurn(){
         nb_turn++;
+        pane.getChildren().add(new Label("Round : " + nb_turn));
         int shoot = shootController.shootBoat(board_bot);
         coord.clear();
 
-        if(shoot == -1) System.out.println("Erreur");
+        if(shoot == -1){
+            System.out.println("Erreur");
+            addHistoryOnError(new String[]{null}, "unlaunched shoot");
+            nb_turn--;
+            return;
+        }
         int shootBot = botController.shootBot(board_game);
-        if(shootBot == 1) boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
+        if(shootBot == 1){
+            boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
+            addHistoryOnShoot(bot.coordHit, true, true);
+        }else{
+            addHistoryOnShoot(bot.coordHit, false, true);
+        }
+        pane.getChildren().add(new Label("End of Round : " + nb_turn));
+
     }
 
     protected void processTurn(int[] coord){
         nb_turn++;
+        pane.getChildren().add(new Label("Round : " + nb_turn));
         int shoot = shootController.shootBoat(board_bot, coord);
 
-        if(shoot == -1) System.out.println("Erreur");
+        if(shoot == -1){
+            addHistoryOnError(new String[]{null}, "unlaunched shoot");
+            System.out.println("Erreur");
+            nb_turn--;
+            return;
+        }
         int shootBot = botController.shootBot(board_game);
-        if(shootBot == 1) boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
+        if(shootBot == 1){
+            boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
+            addHistoryOnShoot(bot.coordHit, true, true);
+        }else{
+            addHistoryOnShoot(bot.coordHit, false, true);
+        }
+        pane.getChildren().add(new Label("End of Round : " + nb_turn));
     }
     public void setController(MainController controller) {
         this.controller = controller;
@@ -260,12 +314,21 @@ public class GameController implements Initializable {
     private void playWithTextField(){
         validation.setOnAction(actionEvent ->{
             try{
-                placeShipAndDisplay(placeShipController.placeShip());
+                if(!placeShipAndDisplay(placeShipController.placeShip())) return;
                 doShootAndDisplay(null);
                 processWin();
             }catch (ArrayIndexOutOfBoundsException e){
                 System.out.println(e.getMessage());
             }
         });
+    }
+
+    private void allBoatDestroy(){
+        if(PlayerHuman.entireShip[0] == 1)pane.getChildren().add(new Label(MainController.getPseudonyme() + " destroy the entire boat"));
+        else if(PlayerHuman.entireShip[1] == 1) pane.getChildren().add(new Label(bot.getBotName() + " destroy the entire boat"));
+        else if(PlayerHuman.entireShip[0] == 0)pane.getChildren().add(new Label(MainController.getPseudonyme() + " haven't destroy the entire boat"));
+        else if(PlayerHuman.entireShip[1] == 0) pane.getChildren().add(new Label(bot.getBotName() + " haven't destroy the entire boat"));
+        PlayerHuman.entireShip[0] = 0;
+        PlayerHuman.entireShip[1] = 0;
     }
 }

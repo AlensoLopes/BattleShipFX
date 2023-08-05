@@ -6,7 +6,7 @@ public class Utils {
 
     public static int[] processCoordinate(TextField textField){
         int a = textField.getText().toLowerCase().charAt(0) - 97;
-        int b = -1;
+        int b;
         try{
             b = Integer.parseInt(textField.getText().substring(1)) - 1;
         }catch (NumberFormatException e){

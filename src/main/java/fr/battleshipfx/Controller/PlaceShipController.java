@@ -6,10 +6,7 @@ import fr.battleship.Ship.Cruiser;
 import fr.battleship.Ship.Submarine;
 import fr.battleship.Ship.Torpedo;
 import fr.battleshipfx.Utils.Utils;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
 
-import java.text.Format;
 
 
 public class PlaceShipController {
@@ -41,7 +38,6 @@ public class PlaceShipController {
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
         if(size == -1) return null;
 
-
         return new String[]{String.valueOf(coord[0] + 1), String.valueOf(coord[1] + 1), String.valueOf(size),
                 getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
     }
@@ -66,7 +62,7 @@ public class PlaceShipController {
     }
 
     protected String getAxis(){
-        return controller.axis.getText();
+        return String.valueOf(controller.axis.getText());
     }
 
     private int searchWhichBoatNeedToBePlaced(){

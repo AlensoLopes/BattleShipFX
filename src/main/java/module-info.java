@@ -5,5 +5,7 @@ module fr.battleship.battleshipfx {
                             
     opens fr.battleshipfx to javafx.fxml;
     opens fr.battleshipfx.Controller;
+    opens fr.battleshipfx.Utils;
+    opens fr.battleship.Player;
     exports fr.battleshipfx;
 }
