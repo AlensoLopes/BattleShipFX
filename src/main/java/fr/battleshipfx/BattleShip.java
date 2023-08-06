@@ -17,6 +17,7 @@ public class BattleShip extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("BattleShip");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

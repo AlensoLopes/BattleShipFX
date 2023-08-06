@@ -45,7 +45,7 @@ public class HistoryController {
 
     protected boolean addHistoryOnError(String[] coordo, String text){
         if(coordo[0] == null){
-            Label label = new Label("An error occured, " + text + " ! ");
+            Label label = new Label("An error occurred, " + text + " ! ");
             label.setStyle("-fx-text-fill: red");
             gameController.pane.getChildren().add(label);
             gameController.coord.clear();
@@ -58,8 +58,8 @@ public class HistoryController {
     private void allBoatDestroy(){
         if(PlayerHuman.entireShip[0] == 1)gameController.pane.getChildren().add(new Label(MainController.getPseudonyme() + " destroy the entire boat"));
         else if(PlayerHuman.entireShip[1] == 1) gameController.pane.getChildren().add(new Label(gameController.bot.getBotName() + " destroy the entire boat"));
-        else if(PlayerHuman.entireShip[0] == 0)gameController.pane.getChildren().add(new Label(MainController.getPseudonyme() + " haven't destroy the entire boat"));
-        else if(PlayerHuman.entireShip[1] == 0) gameController.pane.getChildren().add(new Label(gameController.bot.getBotName() + " haven't destroy the entire boat"));
+        else if(PlayerHuman.entireShip[0] == 0)gameController.pane.getChildren().add(new Label(MainController.getPseudonyme() + " didn't destroy the entire boat"));
+        else if(PlayerHuman.entireShip[1] == 0) gameController.pane.getChildren().add(new Label(gameController.bot.getBotName() + " didn't destroy the entire boat"));
         PlayerHuman.entireShip[0] = 0;
         PlayerHuman.entireShip[1] = 0;
     }

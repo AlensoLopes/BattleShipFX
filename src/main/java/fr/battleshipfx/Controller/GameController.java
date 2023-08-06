@@ -6,6 +6,7 @@ import fr.battleship.Player.Bot;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
 import fr.battleshipfx.BattleShip;
+import fr.battleshipfx.Utils.Utils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -40,6 +41,7 @@ public class GameController implements Initializable {
     @FXML protected Button validation;
     @FXML protected TextField axis;
     @FXML public FlowPane pane;
+    @FXML public ScrollPane scrollPane;
     
     private MainController controller;
     protected final PlaceShipController placeShipController;
@@ -50,7 +52,7 @@ public class GameController implements Initializable {
     protected final RoundController roundController;
 
     protected static final int SIZE = 11;
-    protected static final int SIZE_CELL = 44;
+    protected static final int SIZE_CELL = 39;
     public String[][] board_game;
     public String[][] board_bot;
     protected PlayerHuman playerHuman;
@@ -90,7 +92,6 @@ public class GameController implements Initializable {
         boardController.setGameController(this);
         historyController.setGameController(this);
         roundController.setGameController(this);
-        
         setupBind();
 
         boardController.createBoard();
@@ -101,6 +102,7 @@ public class GameController implements Initializable {
 
         playWithTextField();
         boardController.playWhenClickingOnBoard();
+
     }
     
 
@@ -114,23 +116,14 @@ public class GameController implements Initializable {
         alert.showAndWait().ifPresent(response -> {
             if(response == alert.getButtonTypes().get(0)) {
                 startGame();
-                showAnotherFXML(null, "Game.fxml", stage, new BattleShip());
+                Utils.showAnotherFXML(null, "Game.fxml", stage, new BattleShip());
             } else if(response == alert.getButtonTypes().get(1)){
                 stopGame();
-                showAnotherFXML(new MainController(stage), "Main.fxml", stage, new BattleShip());
+                Utils.showAnotherFXML(new MainController(stage), "Main.fxml", stage, new BattleShip());
             }else{
                 stage.close();
             }
         });
-    }
-    protected void showAnotherFXML(Object controller, String fxmlName, Stage stage, Object mainClass){
-        FXMLLoader fxmlLoader = new FXMLLoader(mainClass.getClass().getResource(fxmlName));
-        if(controller != null) fxmlLoader.setController(controller);
-        try {
-            stage.getScene().setRoot(fxmlLoader.load());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     protected String setupDialogForAxisWhenClickOnBoard(){
@@ -167,11 +160,20 @@ public class GameController implements Initializable {
     }
 
     private void setupBind(){
+        pane.setStyle("-fx-font-size: 11px");
+        center.prefHeightProperty().bind(background.heightProperty());
+        center.prefWidthProperty().bind(background.widthProperty());
         board.prefHeightProperty().bind(center.heightProperty());
         board.prefWidthProperty().bind(center.widthProperty());
         axis.setVisible(false);
         axis.setText("V");
         validation.disableProperty().bind(coord.textProperty().isEmpty());
+        left.prefHeightProperty().bind(background.heightProperty());
+        scrollPane.prefHeightProperty().bind(left.heightProperty());
+        scrollPane.prefWidthProperty().bind(left.widthProperty());
+        pane.prefHeightProperty().bind(scrollPane.heightProperty());
+        pane.prefWidthProperty().bind(scrollPane.widthProperty());
+
     }
     private void setupListenerOnTextField(){
         coord.textProperty().addListener((observableValue, s, t1) -> {
