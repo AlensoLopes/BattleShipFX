@@ -23,11 +23,16 @@ public class BoardController {
             if (node instanceof Label
                     && GridPane.getRowIndex(node) > 0
                     && GridPane.getColumnIndex(node) > 0) {
+
                 node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
-                    gameController.placeShipAndDisplay(gameController.placeShipController.placeShipOnClick(GridPane.getRowIndex(node) - 1,
+                    gameController.roundController.placeShipAndDisplay(
+                            gameController.placeShipController.placeShipOnClick(GridPane.getRowIndex(node) - 1,
                             GridPane.getColumnIndex(node) - 1, gameController.setupDialogForAxisWhenClickOnBoard()));
-                    gameController.doShootAndDisplay(new int[]{GridPane.getRowIndex(node) - 1, GridPane.getColumnIndex(node) - 1});
-                    gameController.processWin();
+
+                    gameController.roundController.doShootAndDisplay(new int[]{GridPane.getRowIndex(node) - 1,
+                            GridPane.getColumnIndex(node) - 1});
+
+                    gameController.roundController.processWin();
 
                 });
             }
@@ -92,7 +97,10 @@ public class BoardController {
     protected void updateBoard(int x, int y, int size, String sens, String type){
         int x_axis = x;
         int y_axis = y;
-
+        if(sens == null){
+            createLabelFromInput(searchNode(x_axis, y_axis), type);
+            return;
+        }
         for (int i = 0; i < size; i++) {
             createLabelFromInput(searchNode(x_axis,y_axis), type);
             if(sens.equals("V")) x_axis++;

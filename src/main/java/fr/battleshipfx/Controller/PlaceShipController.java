@@ -33,10 +33,13 @@ public class PlaceShipController {
     public String[] placeShip(){
         if(!canShipBePlaced()) return null;
         int[] coord = Utils.processCoordinate(controller.coord);
-        if(coord == null) return new String[]{null};
+
+        if(coord == null || coord[0] < 0 || coord[0] > 9 || coord[1] < 0 || coord[1] > 9) return new String[]{null};
+        System.out.println(getAxis());
+        if(getAxis() == null && boatPlaced[0]) return new String[]{null};
 
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
-        if(size == -1) return null;
+        if(size == -1) return new String[]{null};
 
         return new String[]{String.valueOf(coord[0] + 1), String.valueOf(coord[1] + 1), String.valueOf(size),
                 getAxis(), getBoatNameWithIndex(searchWhichBoatNeedToBePlaced())};
@@ -62,7 +65,9 @@ public class PlaceShipController {
     }
 
     protected String getAxis(){
-        return String.valueOf(controller.axis.getText());
+        if(!controller.axis.getText().equalsIgnoreCase("V") &&
+                !controller.axis.getText().equalsIgnoreCase("H")) return null;
+        return controller.axis.getText().toUpperCase();
     }
 
     private int searchWhichBoatNeedToBePlaced(){

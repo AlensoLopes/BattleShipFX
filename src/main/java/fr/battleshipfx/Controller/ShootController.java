@@ -18,7 +18,12 @@ public class ShootController {
 
     public int shootBoat(String[][] board, int[] coord){
         int shootSucceed = gameController.playerHuman.getNbSuccessShoot();
-        gameController.playerHuman.shoot(coord[0], coord[1], board);
+        try{
+            gameController.playerHuman.shoot(coord[0], coord[1], board);
+        }catch (ArrayIndexOutOfBoundsException e){
+            return -1;
+        }
+
         if(gameController.playerHuman.getNbSuccessShoot() > shootSucceed){
             gameController.boardController.updateBoardLabel(coord[0] + 1, coord[1] + 1, GameController.HIT, "HIT");
             gameController.historyController.addHistoryOnShoot(coord, true, false);

@@ -32,7 +32,7 @@ public class HistoryController {
             gameController.pane.getChildren().add(
                     new Label(gameController.playerHuman.getPlayerName() + " failed his shoot in ("
                     + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
-        }else if(hit && bot){
+        }else if(hit){
             gameController.pane.getChildren().add(new Label(gameController.bot.getBotName() + " hit a boat in ("
                     + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
             allBoatDestroy();
@@ -48,6 +48,8 @@ public class HistoryController {
             Label label = new Label("An error occured, " + text + " ! ");
             label.setStyle("-fx-text-fill: red");
             gameController.pane.getChildren().add(label);
+            gameController.coord.clear();
+            gameController.axis.clear();
             return false;
         }
         return true;
