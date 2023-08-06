@@ -46,6 +46,7 @@ public class GameController implements Initializable {
     protected final ShootController shootController;
     protected final BotController botController;
     protected final BoardController boardController;
+    protected final HistoryController historyController;
 
     protected static final int SIZE = 11;
     protected static final int SIZE_CELL = 44;
@@ -56,6 +57,7 @@ public class GameController implements Initializable {
     private DisplayBoard displayBoard;
 
     private int nb_turn = 0;
+    private boolean first_bind = false;
 
     protected static final Background START = new Background(new BackgroundFill(Color.WHITE, null, null));
     protected static final Background SMALL = new Background(new BackgroundFill(Color.RED, null, null));
@@ -66,12 +68,15 @@ public class GameController implements Initializable {
     protected static final Background HIT = new Background(new BackgroundFill(Color.DARKGREEN, null, null));
     protected static final Background NOTHIT = new Background(new BackgroundFill(Color.GREEN, null, null));
     public GameController() {
-        this.placeShipController = new PlaceShipController();
-        this.shootController = new ShootController();
+        placeShipController = new PlaceShipController();
+        shootController = new ShootController();
         boardController = new BoardController();
         botController = new BotController();
+        historyController = new HistoryController();
+
         playerHuman = new PlayerHuman();
         bot = new Bot();
+
         displayBoard = new DisplayBoard();
     }
 
@@ -81,6 +86,7 @@ public class GameController implements Initializable {
         shootController.setGameController(this);
         botController.setGameController(this);
         boardController.setGameController(this);
+        historyController.setGameController(this);
 
         setupBind();
 
@@ -95,20 +101,14 @@ public class GameController implements Initializable {
     }
 
 
-        /*
-         * TODO
-         *  BUG DISPLAY FIRST SHOOT AFTER PLACE ON CLICK
-         * */
 
-
-
-    protected boolean placeShipAndDisplay(String[] coordo){
-        if(coordo == null) return false;
-        if(!addHistoryOnError(coordo, "unplaced boat")) return false;
+    protected int placeShipAndDisplay(String[] coordo){
+        if(coordo == null) return 0;
+        if(!historyController.addHistoryOnError(coordo, "unplaced boat")) return -1;
         displayBoard.displayBoard(board_game);
 
 
-        addHistoryOnPlace(coordo);
+        historyController.addHistoryOnPlace(coordo);
 
 
         placeShipController.boatPlaced[Integer.parseInt(coordo[2])-1] = true;
@@ -122,54 +122,26 @@ public class GameController implements Initializable {
         boardController.updateBoard(Integer.parseInt(coordo[0]), Integer.parseInt(coordo[1]),
                 Integer.parseInt(coordo[2]), coordo[3], coordo[4]);
         axis.clear();
-        return true;
+        return 1;
     }
 
-    protected void addHistoryOnPlace(String[] coordo){
-        if(!placeShipController.boatPlaced[0]){
-            pane.getChildren().addAll(new Label("Boat placed : "), new Label(placeShipController.boatName.getName() + " in ("
-                    + (char) (97 + Integer.parseInt(coordo[0]) - 1) + coordo[1] + ')'));
-        }else{
-            pane.getChildren().add(new Label(placeShipController.boatName.getName() + " in ("
-                    + (char) (97 + (Integer.parseInt(coordo[0]) - 1)) + coordo[1] + ')'));
-        }
-    }
-    protected void addHistoryOnShoot(int[] coordo, boolean hit, boolean bot){
-        if(hit && !bot){
-            pane.getChildren().addAll( new Label(playerHuman.getPlayerName() + " hit a boat in ("
-                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
-            allBoatDestroy();
-        }else if(!hit && !bot){
-            pane.getChildren().add(new Label(playerHuman.getPlayerName() + " failed his shoot in ("
-                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
-        }else if(hit && bot){
-            pane.getChildren().add(new Label(this.bot.getBotName() + " hit a boat in ("
-                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
-            allBoatDestroy();
-        }else{
-            pane.getChildren().add(new Label(this.bot.getBotName() + " failed his shoot in ("
-                    + (char) (97 + (coordo[0])) + (coordo[1] + 1) + ')'));
-        }
 
-    }
-
-    protected boolean addHistoryOnError(String[] coordo, String text){
-        if(coordo[0] == null){
-            Label label = new Label("An error occured, " + text + " ! ");
-            label.setStyle("-fx-text-fill: red");
-            pane.getChildren().add(label);
-            return false;
-        }
-        return true;
-    }
 
     protected void doShootAndDisplay(int[] coord){
         if(Win.getWinner(board_game, board_bot, bot, playerHuman)) return;
         if(!placeShipController.boatPlaced[placeShipController.boatPlaced.length-1]) return;
 
-        axis.setVisible(false);
-        validation.disableProperty().unbind();
-        validation.disableProperty().bind(this.coord.textProperty().isEmpty());
+        if(!first_bind){
+            axis.setVisible(false);
+            validation.disableProperty().unbind();
+            validation.disableProperty().bind(this.coord.textProperty().isEmpty());
+            first_bind = true;
+        }
+
+        if(nb_turn == 0){
+            nb_turn++;
+            return;
+        }
 
         if(coord == null) proccessTurn();
         else processTurn(coord);
@@ -255,16 +227,16 @@ public class GameController implements Initializable {
 
         if(shoot == -1){
             System.out.println("Erreur");
-            addHistoryOnError(new String[]{null}, "unlaunched shoot");
+            historyController.addHistoryOnError(new String[]{null}, "unlaunched shoot");
             nb_turn--;
             return;
         }
         int shootBot = botController.shootBot(board_game);
         if(shootBot == 1){
             boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
-            addHistoryOnShoot(bot.coordHit, true, true);
+            historyController.addHistoryOnShoot(bot.coordHit, true, true);
         }else{
-            addHistoryOnShoot(bot.coordHit, false, true);
+            historyController.addHistoryOnShoot(bot.coordHit, false, true);
         }
         pane.getChildren().add(new Label("End of Round : " + nb_turn));
 
@@ -276,7 +248,7 @@ public class GameController implements Initializable {
         int shoot = shootController.shootBoat(board_bot, coord);
 
         if(shoot == -1){
-            addHistoryOnError(new String[]{null}, "unlaunched shoot");
+            historyController.addHistoryOnError(new String[]{null}, "unlaunched shoot");
             System.out.println("Erreur");
             nb_turn--;
             return;
@@ -284,15 +256,13 @@ public class GameController implements Initializable {
         int shootBot = botController.shootBot(board_game);
         if(shootBot == 1){
             boardController.updateBoardLabel(bot.coordHit[0] + 1, bot.coordHit[1] + 1, DEAD, null);
-            addHistoryOnShoot(bot.coordHit, true, true);
+            historyController.addHistoryOnShoot(bot.coordHit, true, true);
         }else{
-            addHistoryOnShoot(bot.coordHit, false, true);
+            historyController.addHistoryOnShoot(bot.coordHit, false, true);
         }
         pane.getChildren().add(new Label("End of Round : " + nb_turn));
     }
-    public void setController(MainController controller) {
-        this.controller = controller;
-    }
+
     private void setupBind(){
         board.prefHeightProperty().bind(center.heightProperty());
         board.prefWidthProperty().bind(center.widthProperty());
@@ -313,22 +283,13 @@ public class GameController implements Initializable {
     }
     private void playWithTextField(){
         validation.setOnAction(actionEvent ->{
-            try{
-                if(!placeShipAndDisplay(placeShipController.placeShip())) return;
-                doShootAndDisplay(null);
-                processWin();
-            }catch (ArrayIndexOutOfBoundsException e){
-                System.out.println(e.getMessage());
-            }
+            if(placeShipAndDisplay(placeShipController.placeShip()) == -1) return;
+            doShootAndDisplay(null);
+            processWin();
         });
     }
 
-    private void allBoatDestroy(){
-        if(PlayerHuman.entireShip[0] == 1)pane.getChildren().add(new Label(MainController.getPseudonyme() + " destroy the entire boat"));
-        else if(PlayerHuman.entireShip[1] == 1) pane.getChildren().add(new Label(bot.getBotName() + " destroy the entire boat"));
-        else if(PlayerHuman.entireShip[0] == 0)pane.getChildren().add(new Label(MainController.getPseudonyme() + " haven't destroy the entire boat"));
-        else if(PlayerHuman.entireShip[1] == 0) pane.getChildren().add(new Label(bot.getBotName() + " haven't destroy the entire boat"));
-        PlayerHuman.entireShip[0] = 0;
-        PlayerHuman.entireShip[1] = 0;
+    public void setController(MainController controller) {
+        this.controller = controller;
     }
 }
