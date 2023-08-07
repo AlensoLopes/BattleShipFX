@@ -50,7 +50,7 @@ public class RoundController {
         if(coord == null) proccessRound();
         else processRound(coord);
 
-        gameController.displayBoard.displayBoard(gameController.board_game);
+        //gameController.displayBoard.displayBoard(gameController.board_game);
     }
 
     protected void processWin(){

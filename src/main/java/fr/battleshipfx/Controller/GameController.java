@@ -3,6 +3,7 @@ package fr.battleshipfx.Controller;
 import fr.battleship.Board.CreateBoard;
 import fr.battleship.Board.DisplayBoard;
 import fr.battleship.Player.Bot;
+import fr.battleship.Player.Botv2;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
 import fr.battleshipfx.BattleShip;
@@ -53,10 +54,10 @@ public class GameController implements Initializable {
 
     protected static final int SIZE = 11;
     protected static final int SIZE_CELL = 39;
-    public String[][] board_game;
+    public static String[][] board_game;
     public String[][] board_bot;
     protected PlayerHuman playerHuman;
-    public Bot bot;
+    public Botv2 bot;
     protected DisplayBoard displayBoard;
 
     protected int nb_round = 0;
@@ -79,7 +80,7 @@ public class GameController implements Initializable {
         roundController = new RoundController();
         
         playerHuman = new PlayerHuman();
-        bot = new Bot();
+        bot = new Botv2();
 
         displayBoard = new DisplayBoard();
     }

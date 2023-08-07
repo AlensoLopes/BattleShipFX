@@ -56,7 +56,7 @@ public class Bot extends Player {
         }
     }
 
-    private void checkIfPlaceShip(String[][] array, String sens, int column, int line) {
+    protected void checkIfPlaceShip(String[][] array, String sens, int column, int line) {
         if(!lockbot.contains("S")){
             new Warship().placeSmallShip(line, column, new Submarine(), array, true);
             if(isPlacementGood(array, new Submarine().getStyle())) lockbot.add("S");
@@ -72,7 +72,7 @@ public class Bot extends Player {
         }
     }
 
-    private String processAxis(int axis) {
+    protected String processAxis(int axis) {
         String sens = "";
         switch (axis) {
             case 0 -> sens = "V";
@@ -81,16 +81,16 @@ public class Bot extends Player {
         return sens;
     }
 
-    private int randomPos(String[][] array, String sens) {
+    protected int randomPos(String[][] array, String sens) {
         if(Objects.equals(sens, "H")) return new Random().nextInt(array.length - 4);
         return new Random().nextInt(array.length);
     }
 
-    private int randomAxis() {
+    protected int randomAxis() {
         return new Random().nextInt(2);
     }
 
-    private boolean isPlacementGood(String[][] board, String style){
+    protected boolean isPlacementGood(String[][] board, String style){
         for (String[] strings : board) {
             for (int j = 0; j < board.length; j++) {
                 if (strings[j].equals(style)) return true;
@@ -109,7 +109,7 @@ public class Bot extends Player {
         return PlayerHuman.checkCoordAndHit(array, x, y, true);
     }
 
-    private boolean doNotHitOnTwiceCoord(String[][] array){
+    protected boolean doNotHitOnTwiceCoord(String[][] array){
         int x = 0, y = 0, coord;
         boolean isGood = true;
         Random r = new Random();
@@ -132,7 +132,7 @@ public class Bot extends Player {
         return shoot(x, y, array);
     }
 
-    private static int getDigitFromNumber(int number, int start, int end){
+    protected static int getDigitFromNumber(int number, int start, int end){
         return Integer.parseInt(Integer.toString(number).substring(start, end));
     }
 
