@@ -130,6 +130,7 @@ public class Bot extends Player {
         coordHit[0] = x;
         coordHit[1] = y;
         return shoot(x, y, array);
+
     }
 
     protected static int getDigitFromNumber(int number, int start, int end){
