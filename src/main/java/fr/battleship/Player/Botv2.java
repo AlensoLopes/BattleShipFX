@@ -4,7 +4,9 @@ import fr.battleship.Board.CreateBoard;
 import fr.battleship.Board.DisplayBoard;
 import fr.battleshipfx.Controller.GameController;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Botv2 extends Bot{
@@ -48,7 +50,6 @@ public class Botv2 extends Bot{
             return super.shoot(array);
         }
 
-        System.out.println("X : " + x + "Y : " + y + "XH : " + boatCoord[dim][0] + "YH" + boatCoord[dim][1]);
         if(boatCoord[dim][0] == -1){
             boatCoord[dim][0] = x;
             boatCoord[dim][1] = y;
@@ -69,6 +70,7 @@ public class Botv2 extends Bot{
                             notHit = new int[]{-1,-1,-1,-1};
                             coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
                             dim++;
+                            board_copy = array;
                             return super.shoot(array);
                         }
                     return onShoot(array);
@@ -76,7 +78,10 @@ public class Botv2 extends Bot{
             }
         }
         try{
-            if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]-1) && notHit[0] != 1){
+            if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]-1)
+                    && notHit[0] != 1
+                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]-1)))){
+
                 if(board_copy[boatCoord[dim][0]][boatCoord[dim][1]-1].equals(style[dim])
                 && !containsCoord(boatCoord[dim][0], boatCoord[dim][1]-1, coordBot)){
                     boatCoord[dim][0] = boatCoord[dim][0];
@@ -85,10 +90,13 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
                 }else notHit[0] = 1;
-                System.out.println(boatCoord[dim][0] + "YH" + boatCoord[dim][1] + "NBHUT" + nbHit);
+                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
-            }else if(checkCoord(array, boatCoord[dim][0]+1, boatCoord[dim][1]) && notHit[1] != 1){
+            }else if(checkCoord(array, boatCoord[dim][0]+1, boatCoord[dim][1])
+                    && notHit[1] != 1
+                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]+1) + String.valueOf(boatCoord[dim][1])))){
+
                 if(board_copy[boatCoord[dim][0]+1][boatCoord[dim][1]].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0]+1, boatCoord[dim][1], coordBot)){
 
@@ -99,10 +107,13 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
                 }else notHit[1] = 1;
-                System.out.println(boatCoord[dim][0] + "YH" + boatCoord[dim][1] + "NBHUT" + nbHit);
+                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
-            }else if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]+1)&& notHit[2] != 1){
+            }else if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]+1)
+                    && notHit[2] != 1
+                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]+1)))){
+
                 if(board_copy[boatCoord[dim][0]][boatCoord[dim][1]+1].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0], boatCoord[dim][1]+1, coordBot)){
                     boatCoord[dim][0] = boatCoord[dim][0];
@@ -113,10 +124,12 @@ public class Botv2 extends Bot{
                     nbHit++;
 
                 }else notHit[2] = 1;
-                System.out.println(boatCoord[dim][0] + "YH" + boatCoord[dim][1] + "NBHUT" + nbHit);
+                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
-            }else if(checkCoord(array, boatCoord[dim][0]-1, boatCoord[dim][1])&& notHit[3] != 1){
+            }else if(checkCoord(array, boatCoord[dim][0]-1, boatCoord[dim][1])
+                    && notHit[3] != 1
+                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]-1) + String.valueOf(boatCoord[dim][1])))){
                 if(board_copy[boatCoord[dim][0]+1][boatCoord[dim][1]].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0]-1, boatCoord[dim][1], coordBot)){
                     boatCoord[dim][0] = boatCoord[dim][0]-1;
@@ -126,10 +139,10 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
                 }else notHit[3] = 1;
-                System.out.println(boatCoord[dim][0] + "YH" + boatCoord[dim][1] + "NBHUT" + nbHit);
+                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
             }
-        }catch (ArrayIndexOutOfBoundsException ignored){
+        }catch (ArrayIndexOutOfBoundsException | NumberFormatException ignored){
             for (int i = 0; i < notHit.length; i++) {
                 if(notHit[i] == -1){
                     notHit[i] = 1;
@@ -178,21 +191,37 @@ public class Botv2 extends Bot{
     }
 
     public static void main(String[] args) {
+        int x = 1;
+        int b = 2;
+        int[] z = new int[]{1, 2, 3};
+        System.out.println(x + String.valueOf(b));
+        List<Integer> list = new ArrayList<>();
+
+        list.add(Integer.valueOf(x + String.valueOf(z[1]+1)));
+        if(list.contains(Integer.valueOf(x + String.valueOf(z[1]-1)))) System.out.println("a");
+        else System.out.println("b");
+        System.out.println(list.get(0));
         CreateBoard createBoard = new CreateBoard();
         DisplayBoard displayBoard = new DisplayBoard();
-        String[][] board = createBoard.createBoard();
-        Botv2 botv2 = new Botv2();
-        botv2.placeShipBot(board);
-        /*Bot bot = new Bot();
-        bot.placeShipBot(board);*/
+        int[] nb = new int[100];
+        for (int i = 0; i < 100; i++) {
+            String[][] board = createBoard.createBoard();
+            Botv2 botv2 = new Botv2();
+            botv2.placeShipBot(board);
 
-        int a = 0;
-        while(PlayerHuman.getNbShipAlive(board) != 0){
-            /*bot.shoot(board);*/
-            botv2.shoot(board);
-            displayBoard.displayBoard(board);
-            a++;
+            int a = 0;
+            while(PlayerHuman.getNbShipAlive(board) != 0){
+                botv2.shoot(board);
+                a++;
+            }
+            nb[i] = a;
+            System.out.println("---------------");
         }
-        System.out.println(a);
+        int a = 0;
+        for (int i = 0; i < nb.length; i++) {
+            a += nb[i];
+
+        }
+        System.out.println(a/nb.length);
     }
 }
