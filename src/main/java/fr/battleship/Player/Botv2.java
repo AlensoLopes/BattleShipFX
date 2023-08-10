@@ -17,6 +17,7 @@ public class Botv2 extends Bot{
     private String style[];
     private int nbHit = 0;
     private int[] notHit;
+    private int[] axis;
     private int dim = 0;
     private int nb = 0;
     public static final String[][] size = new String[][]{{"1", "■"}, {"2","▄"},{"3","▀"}, {"4", "█"}};
@@ -27,6 +28,7 @@ public class Botv2 extends Bot{
         coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
         notHit = new int[]{-1,-1,-1,-1};
         style = new String[4];
+        axis = new int[]{-1, -1};
     }
 
     @Override
@@ -57,6 +59,7 @@ public class Botv2 extends Bot{
             coordBot[nbHit][0] = boatCoord[dim][0];
             coordBot[nbHit][1] = boatCoord[dim][1];
             nbHit++;
+
         }
         if(!board_copy[x][y].equals(style[dim])){
             style[dim+1] = board_copy[x][y];
@@ -68,8 +71,12 @@ public class Botv2 extends Bot{
                         if(boatCoord[dim+1][0] == -1) {
                             nbHit = 0;
                             notHit = new int[]{-1,-1,-1,-1};
+                            for (int j = 0; j < coordBot.length; j++) {
+                                if(coordBot[j][0] != -1) botHit.add(Integer.valueOf(coordBot[j][0] + String.valueOf(coordBot[j][1])));
+                            }
                             coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
                             dim++;
+                            axis = new int[]{-1, -1};
                             board_copy = array;
                             return super.shoot(array);
                         }
@@ -77,10 +84,12 @@ public class Botv2 extends Bot{
                 }
             }
         }
+
         try{
             if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]-1)
                     && notHit[0] != 1
-                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]-1)))){
+                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]-1)))
+                    && ((axis[0] == -1 && axis[1] == -1) || (axis[0] == 1 && axis[1] == 0))){
 
                 if(board_copy[boatCoord[dim][0]][boatCoord[dim][1]-1].equals(style[dim])
                 && !containsCoord(boatCoord[dim][0], boatCoord[dim][1]-1, coordBot)){
@@ -89,13 +98,16 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][0] = boatCoord[dim][0];
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
+                    axis[0] = 1;
+                    axis[1] = 0;
+                    System.out.println("X " + boatCoord[dim][0] + " Y " + boatCoord[dim][1] + style[dim]);
                 }else notHit[0] = 1;
-                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
             }else if(checkCoord(array, boatCoord[dim][0]+1, boatCoord[dim][1])
                     && notHit[1] != 1
-                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]+1) + String.valueOf(boatCoord[dim][1])))){
+                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]+1) + String.valueOf(boatCoord[dim][1])))
+                    && ((axis[0] == -1 && axis[1] == -1) || (axis[0] == 0 && axis[1] == 1))){
 
                 if(board_copy[boatCoord[dim][0]+1][boatCoord[dim][1]].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0]+1, boatCoord[dim][1], coordBot)){
@@ -106,13 +118,16 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][0] = boatCoord[dim][0];
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
+                    axis[0] = 0;
+                    axis[1] = 1;
+                    System.out.println("X " + boatCoord[dim][0] + " Y " + boatCoord[dim][1] + style[dim]);
                 }else notHit[1] = 1;
-                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
             }else if(checkCoord(array, boatCoord[dim][0], boatCoord[dim][1]+1)
                     && notHit[2] != 1
-                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]+1)))){
+                    && !botHit.contains(Integer.valueOf(boatCoord[dim][0] + "" + (boatCoord[dim][1]+1)))
+                    && ((axis[0] == -1 && axis[1] == -1) || (axis[0] == 1 && axis[1] == 0))){
 
                 if(board_copy[boatCoord[dim][0]][boatCoord[dim][1]+1].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0], boatCoord[dim][1]+1, coordBot)){
@@ -122,14 +137,16 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][0] = boatCoord[dim][0];
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
-
+                    axis[0] = 1;
+                    axis[1] = 0;
+                    System.out.println("X " + boatCoord[dim][0] + " Y " + boatCoord[dim][1] + style[dim]);
                 }else notHit[2] = 1;
-                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
 
             }else if(checkCoord(array, boatCoord[dim][0]-1, boatCoord[dim][1])
                     && notHit[3] != 1
-                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]-1) + String.valueOf(boatCoord[dim][1])))){
+                    && !botHit.contains(Integer.valueOf((boatCoord[dim][0]-1) + String.valueOf(boatCoord[dim][1])))
+                    && ((axis[0] == -1 && axis[1] == -1) || (axis[0] == 0 && axis[1] == 1))){
                 if(board_copy[boatCoord[dim][0]+1][boatCoord[dim][1]].equals(style[dim])
                         && !containsCoord(boatCoord[dim][0]-1, boatCoord[dim][1], coordBot)){
                     boatCoord[dim][0] = boatCoord[dim][0]-1;
@@ -138,8 +155,10 @@ public class Botv2 extends Bot{
                     coordBot[nbHit][0] = boatCoord[dim][0];
                     coordBot[nbHit][1] = boatCoord[dim][1];
                     nbHit++;
+                    System.out.println("X " + boatCoord[dim][0] + " Y " + boatCoord[dim][1] + style[dim]);
+                    axis[0] = 0;
+                    axis[1] = 1;
                 }else notHit[3] = 1;
-                botHit.add(Integer.valueOf(boatCoord[dim][0] + String.valueOf(boatCoord[dim][1])));
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
             }
         }catch (ArrayIndexOutOfBoundsException | NumberFormatException ignored){
@@ -191,37 +210,34 @@ public class Botv2 extends Bot{
     }
 
     public static void main(String[] args) {
-        int x = 1;
-        int b = 2;
-        int[] z = new int[]{1, 2, 3};
-        System.out.println(x + String.valueOf(b));
-        List<Integer> list = new ArrayList<>();
 
-        list.add(Integer.valueOf(x + String.valueOf(z[1]+1)));
-        if(list.contains(Integer.valueOf(x + String.valueOf(z[1]-1)))) System.out.println("a");
-        else System.out.println("b");
-        System.out.println(list.get(0));
-        CreateBoard createBoard = new CreateBoard();
-        DisplayBoard displayBoard = new DisplayBoard();
         int[] nb = new int[100];
+        int a;
         for (int i = 0; i < 100; i++) {
-            String[][] board = createBoard.createBoard();
+            CreateBoard createBoard = new CreateBoard();
+            DisplayBoard displayBoard = new DisplayBoard();
             Botv2 botv2 = new Botv2();
+            String[][] board;
+            board = createBoard.createBoard();
             botv2.placeShipBot(board);
-
-            int a = 0;
+            a = 0;
             while(PlayerHuman.getNbShipAlive(board) != 0){
                 botv2.shoot(board);
                 a++;
+                displayBoard.displayBoard(board);
             }
             nb[i] = a;
             System.out.println("---------------");
         }
-        int a = 0;
+        int c = 0;
         for (int i = 0; i < nb.length; i++) {
-            a += nb[i];
-
+            c += nb[i];
+            System.out.printf("%d;", nb[i]);
         }
-        System.out.println(a/nb.length);
+        System.out.println();
+        System.out.println(c/nb.length);
+
+
     }
+
 }
