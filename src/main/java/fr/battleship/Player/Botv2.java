@@ -2,6 +2,7 @@ package fr.battleship.Player;
 
 import fr.battleship.Board.CreateBoard;
 import fr.battleship.Board.DisplayBoard;
+import fr.battleship.Listeners.Warship;
 import fr.battleshipfx.Controller.GameController;
 
 import java.util.ArrayList;
@@ -77,12 +78,22 @@ public class Botv2 extends Bot{
                             coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
                             dim++;
                             axis = new int[]{-1, -1};
-                            board_copy = array;
-                            return super.shoot(array);
+                            board_copy = copy(array);
+                            return onShoot(array);
                         }
                     return onShoot(array);
                 }
             }
+        }
+
+        if(boatCoord[dim][0] == 0){
+            notHit[3] = 1;
+        }else if(boatCoord[dim][0] == 9){
+            notHit[1] = 1;
+        }else if(boatCoord[dim][1] == 0){
+            notHit[0] = 1;
+        }else if(boatCoord[dim][1] == 9){
+            notHit[2] = 1;
         }
 
         try{
@@ -184,7 +195,6 @@ public class Botv2 extends Bot{
             return onShoot(array);
         }
 
-
         return super.shoot(array);
     }
 
@@ -213,7 +223,7 @@ public class Botv2 extends Bot{
 
         int[] nb = new int[100];
         int a;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             CreateBoard createBoard = new CreateBoard();
             DisplayBoard displayBoard = new DisplayBoard();
             Botv2 botv2 = new Botv2();
@@ -230,12 +240,31 @@ public class Botv2 extends Bot{
             System.out.println("---------------");
         }
         int c = 0;
+        int d = 0;
         for (int i = 0; i < nb.length; i++) {
             c += nb[i];
             System.out.printf("%d;", nb[i]);
+            if(nb[i] < 80) d++;
         }
         System.out.println();
         System.out.println(c/nb.length);
+        System.out.println(Arrays.stream(nb).min());
+        System.out.println(Arrays.stream(nb).max());
+        System.out.println(d);
+
+        /*CreateBoard createBoard = new CreateBoard();
+        DisplayBoard displayBoard = new DisplayBoard();
+        Botv2 botv2 = new Botv2();
+        String[][] board = displayBoard.createBoard();
+        board[0][0] = size[3][1];
+        board[1][0] = size[3][1];
+        board[2][0] = size[3][1];
+        board[3][0] = size[3][1];
+        while(PlayerHuman.getNbShipAlive(board) != 0){
+            botv2.shoot(board);
+            displayBoard.displayBoard(board);
+        }
+        System.out.println("---------------");*/
 
 
     }
