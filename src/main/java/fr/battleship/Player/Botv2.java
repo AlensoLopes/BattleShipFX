@@ -25,10 +25,10 @@ public class Botv2 extends Bot{
 
     public Botv2() {
         super();
-        boatCoord = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
-        coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
+        boatCoord = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}, {-1, -1}, {-1, -1}};
+        coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}, {-1, -1}, {-1, -1}};
         notHit = new int[]{-1,-1,-1,-1};
-        style = new String[4];
+        style = new String[6];
         axis = new int[]{-1, -1};
     }
 
@@ -69,19 +69,20 @@ public class Botv2 extends Bot{
         }else{
             for (int i = 0; i < size.length; i++) {
                     if(style[dim].equals(size[i][1]) && nbHit == Integer.parseInt(size[i][0])){
-                        if(boatCoord[dim+1][0] == -1) {
+                        if(dim < 3 && boatCoord[dim+1][0] == -1) {
                             nbHit = 0;
                             notHit = new int[]{-1,-1,-1,-1};
                             for (int j = 0; j < coordBot.length; j++) {
                                 if(coordBot[j][0] != -1) botHit.add(Integer.valueOf(coordBot[j][0] + String.valueOf(coordBot[j][1])));
                             }
-                            coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}};
+                            coordBot = new int[][]{{-1, -1},{-1, -1},{-1, -1},{-1, -1}, {-1, -1}, {-1, -1}};
                             dim++;
                             axis = new int[]{-1, -1};
                             board_copy = copy(array);
+                            nb = 0;
                             return onShoot(array);
                         }
-                    return onShoot(array);
+
                 }
             }
         }
@@ -223,7 +224,7 @@ public class Botv2 extends Bot{
 
         int[] nb = new int[100];
         int a;
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 100; i++) {
             CreateBoard createBoard = new CreateBoard();
             DisplayBoard displayBoard = new DisplayBoard();
             Botv2 botv2 = new Botv2();
@@ -260,6 +261,9 @@ public class Botv2 extends Bot{
         board[1][0] = size[3][1];
         board[2][0] = size[3][1];
         board[3][0] = size[3][1];
+        board[4][0] = size[2][1];
+        board[5][0] = size[2][1];
+        board[6][0] = size[2][1];
         while(PlayerHuman.getNbShipAlive(board) != 0){
             botv2.shoot(board);
             displayBoard.displayBoard(board);
