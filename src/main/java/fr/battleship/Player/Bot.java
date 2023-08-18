@@ -122,7 +122,10 @@ public class Bot extends Player {
                 x = 0;
                 y = getDigitFromNumber(coord, 0, 1);
             }
-            if(!(botHit.contains(coord))){
+            if(x == 0 && !botHit.contains(y)){
+                botHit.add(y);
+                isGood = false;
+            }else if(!(botHit.contains(coord))){
                 botHit.add(coord);
                 isGood = false;
             }
