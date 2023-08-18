@@ -8,14 +8,14 @@ import java.util.Arrays;
 
 public class Botv2 extends Bot{
 
-    private int[][] boatCoord;
+    public int[][] boatCoord;
     private int[][] coordBot;
     private String[][] board_copy;
     private String[] style;
     private int nbHit = 0;
     private int[] notHit;
     private int[] axis;
-    private int dim = 0;
+    public int dim = 0;
     private int nb = 0;
     public static final String[][] size = new String[][]{{"1", "■"}, {"2","▄"},{"3","▀"}, {"4", "█"}};
     public static final int STARTBOARD = 0;
@@ -199,6 +199,8 @@ public class Botv2 extends Bot{
         nbHit++;
         axis[0] = vertical;
         axis[1] = horizontal;
+        coordHit[0] = coordX;
+        coordHit[1] = coordY;
     }
 
     private boolean processHit(String[][] array, int coordX, int coordY, int vertical, int horizontal, int numberHit){
