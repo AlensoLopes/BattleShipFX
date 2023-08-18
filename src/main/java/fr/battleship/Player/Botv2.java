@@ -63,14 +63,11 @@ public class Botv2 extends Bot{
         try{
             if(processHit(array, boatCoord[dim][0], boatCoord[dim][1]-1, 1, 0, 0)){
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
-            }
-            if(processHit(array, boatCoord[dim][0]+1, boatCoord[dim][1], 0, 1, 1)){
+            }else if(processHit(array, boatCoord[dim][0]+1, boatCoord[dim][1], 0, 1, 1)){
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
-            }
-            if(processHit(array, boatCoord[dim][0], boatCoord[dim][1]+1, 1, 0, 2)){
+            }else if(processHit(array, boatCoord[dim][0], boatCoord[dim][1]+1, 1, 0, 2)){
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
-            }
-            if(processHit(array, boatCoord[dim][0]-1, boatCoord[dim][1], 0, 1, 3)){
+            }else if(processHit(array, boatCoord[dim][0]-1, boatCoord[dim][1], 0, 1, 3)){
                 return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
             }
         }catch (ArrayIndexOutOfBoundsException | NumberFormatException ignored){
@@ -205,11 +202,12 @@ public class Botv2 extends Bot{
     }
 
     private boolean processHit(String[][] array, int coordX, int coordY, int vertical, int horizontal, int numberHit){
-        if(canHit(coordX, coordY, vertical, horizontal, numberHit) && isBoardContainsBoatAtCoord(coordX, coordY)){
-            updateValHit(coordX, coordY, vertical, horizontal);
+        if(canHit(coordX, coordY, vertical, horizontal, numberHit)){
+            if(isBoardContainsBoatAtCoord(coordX, coordY)){
+                updateValHit(coordX, coordY, vertical, horizontal);
+            }else notHit[numberHit] = 1;
             return true;
         }
-        notHit[numberHit] = 1;
         return false;
     }
 
