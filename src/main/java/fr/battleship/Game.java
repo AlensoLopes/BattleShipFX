@@ -11,7 +11,7 @@ import fr.battleship.Win.Win;
 
 public class Game {
     static PlayerHuman p;
-    static Botv2 b;
+    static AdvancedBot b;
     static Warship[] objShip = {new Submarine(), new Torpedo(),
             new Cruiser(), new Armoured()};
     static String[][] board = new CreateBoard().createBoard();
@@ -23,7 +23,7 @@ public class Game {
         boolean stop = false;
         int tour = 0;
         p = new PlayerHuman();
-        b = new Botv2();
+        b = new AdvancedBot();
         p.setPlayerName();
         w.deployShip((Submarine) objShip[0], (Torpedo) objShip[1],
                 (Cruiser) objShip[2], (Armoured) objShip[3], board);

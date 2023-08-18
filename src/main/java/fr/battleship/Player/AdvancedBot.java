@@ -6,7 +6,7 @@ import fr.battleship.Board.DisplayBoard;
 import java.util.Arrays;
 
 
-public class Botv2 extends Bot{
+public class AdvancedBot extends Bot{
 
     public int[][] boatCoord;
     private int[][] coordBot;
@@ -21,7 +21,7 @@ public class Botv2 extends Bot{
     public static final int STARTBOARD = 0;
     public static final int ENDBOARD = 9;
 
-    public Botv2() {
+    public AdvancedBot() {
         super();
         initStartingVal();
     }
@@ -228,7 +228,7 @@ public class Botv2 extends Bot{
         for (int i = 0; i < 100; i++) {
             CreateBoard createBoard = new CreateBoard();
             DisplayBoard displayBoard = new DisplayBoard();
-            Botv2 botv2 = new Botv2();
+            AdvancedBot botv2 = new AdvancedBot();
             String[][] board;
             board = createBoard.createBoard();
             botv2.placeShipBot(board);
@@ -245,7 +245,7 @@ public class Botv2 extends Bot{
         for (int i = 0; i < nb.length; i++) {
             c += nb[i];
             System.out.printf("%d;", nb[i]);
-            if(nb[i] < 80) d++;
+            if(nb[i] < 50) d++;
         }
         System.out.println();
         System.out.println(c/nb.length);
