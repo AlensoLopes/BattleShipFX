@@ -61,10 +61,18 @@ public class Botv2 extends Bot{
         doNotHitOutside();
 
         try{
-            processHit(array, boatCoord[dim][0], boatCoord[dim][1]-1, 1, 0, 0);
-            processHit(array, boatCoord[dim][0]+1, boatCoord[dim][1], 0, 1, 1);
-            processHit(array, boatCoord[dim][0], boatCoord[dim][1]+1, 1, 0, 2);
-            processHit(array, boatCoord[dim][0]-1, boatCoord[dim][1], 0, 1, 3);
+            if(processHit(array, boatCoord[dim][0], boatCoord[dim][1]-1, 1, 0, 0)){
+                return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
+            }
+            if(processHit(array, boatCoord[dim][0]+1, boatCoord[dim][1], 0, 1, 1)){
+                return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
+            }
+            if(processHit(array, boatCoord[dim][0], boatCoord[dim][1]+1, 1, 0, 2)){
+                return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
+            }
+            if(processHit(array, boatCoord[dim][0]-1, boatCoord[dim][1], 0, 1, 3)){
+                return shoot(boatCoord[dim][0], boatCoord[dim][1], array);
+            }
         }catch (ArrayIndexOutOfBoundsException | NumberFormatException ignored){
             for (int i = 0; i < notHit.length; i++) {
                 if(notHit[i] == -1){
@@ -196,12 +204,13 @@ public class Botv2 extends Bot{
         axis[1] = horizontal;
     }
 
-    private void processHit(String[][] array, int coordX, int coordY, int vertical, int horizontal, int numberHit){
+    private boolean processHit(String[][] array, int coordX, int coordY, int vertical, int horizontal, int numberHit){
         if(canHit(coordX, coordY, vertical, horizontal, numberHit) && isBoardContainsBoatAtCoord(coordX, coordY)){
             updateValHit(coordX, coordY, vertical, horizontal);
-        }else notHit[numberHit] = 1;
-
-        shoot(coordX, coordY, array);
+            return true;
+        }
+        notHit[numberHit] = 1;
+        return false;
     }
 
 
@@ -214,8 +223,6 @@ public class Botv2 extends Bot{
 
 
     public static void main(String[] args) {
-
-
         int[] nb = new int[100];
         int a;
         for (int i = 0; i < 100; i++) {
