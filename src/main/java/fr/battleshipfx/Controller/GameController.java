@@ -2,6 +2,7 @@ package fr.battleshipfx.Controller;
 
 import fr.battleship.Board.CreateBoard;
 import fr.battleship.Board.DisplayBoard;
+import fr.battleship.Main;
 import fr.battleship.Player.Bot;
 import fr.battleship.Player.AdvancedBot;
 import fr.battleship.Player.PlayerHuman;
@@ -108,7 +109,8 @@ public class GameController implements Initializable {
     
 
     protected void replay(Stage stage){
-        Alert alert = new Alert(Alert.AlertType.INFORMATION, "Do you want to start a new game ?");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(Win.winner + " won the game in " + nb_round + " rounds , do you want to start a new game ?");
         alert.getButtonTypes().setAll(
             new ButtonType("Yes with the same name"),
             new ButtonType("Yes but with another name"),
