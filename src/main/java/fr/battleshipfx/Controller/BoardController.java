@@ -41,9 +41,21 @@ public class BoardController {
 
     protected void updateBoardLabel(int x, int y, Background background, String text){
         Label label = (Label) searchNode(x, y);
+        label.setStyle("-fx-font-size: 15");
+        if(background.equals(GameController.NOTHIT)){
+            label.setText("○");
+            return;
+        }
+        else if(background.equals(GameController.HIT)){
+            label.setStyle("-fx-font-size: 25");
+            label.setText("●");
+            return;
+        }
+        else if(background.equals(GameController.DEAD)){
+            label.setText("X");
+            return;
+        }
         label.setBackground(background);
-        if(text == null) label.setText(label.getText());
-        else label.setText(text);
     }
 
     protected void createBoard(){

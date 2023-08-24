@@ -11,7 +11,7 @@ public class RoundController {
     protected int placeShipAndDisplay(String[] coordo){
         if(coordo == null) return 0;
         if(!gameController.historyController.addHistoryOnError(coordo, "unplaced boat")) return -1;
-        gameController.displayBoard.displayBoard(gameController.board_game);
+        gameController.displayBoard.displayBoard(GameController.board_game);
 
         gameController.historyController.addHistoryOnPlace(coordo);
 
@@ -31,7 +31,7 @@ public class RoundController {
 
 
     protected void doShootAndDisplay(int[] coord){
-        if(Win.getWinner(gameController.board_game, gameController.board_bot,
+        if(Win.getWinner(GameController.board_game, gameController.board_bot,
                 gameController.bot, gameController.playerHuman)) return;
         if(!gameController.placeShipController.boatPlaced[gameController.placeShipController.boatPlaced.length-1]) return;
 
@@ -54,7 +54,7 @@ public class RoundController {
     }
 
     protected void processWin(){
-        if(!Win.getWinner(gameController.board_game, gameController.board_bot,
+        if(!Win.getWinner(GameController.board_game, gameController.board_bot,
                 gameController.bot, gameController.playerHuman)) return;
 
         gameController.validation.disableProperty().unbind();
@@ -96,7 +96,7 @@ public class RoundController {
     }
 
     private void changeGUIAfterShoot(){
-        int shootBot = gameController.botController.shootBot(gameController.board_game);
+        int shootBot = gameController.botController.shootBot(GameController.board_game);
         if(shootBot == 1){
             gameController.boardController.updateBoardLabel(gameController.bot.coordHit[0] + 1,
                     gameController.bot.coordHit[1] + 1, GameController.DEAD, null);

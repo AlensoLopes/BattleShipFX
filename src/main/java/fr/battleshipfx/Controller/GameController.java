@@ -79,7 +79,6 @@ public class GameController implements Initializable {
         botController = new BotController();
         historyController = new HistoryController();
         roundController = new RoundController();
-        
         playerHuman = new PlayerHuman();
         bot = new AdvancedBot();
 
@@ -104,6 +103,12 @@ public class GameController implements Initializable {
 
         playWithTextField();
         boardController.playWhenClickingOnBoard();
+
+        scrollPane.needsLayoutProperty().addListener((observableValue, oldValue, newValue) -> {
+            if(!newValue){
+                scrollPane.setVvalue(scrollPane.getVmax());
+            }
+        });
 
     }
     
@@ -176,7 +181,6 @@ public class GameController implements Initializable {
         scrollPane.prefWidthProperty().bind(left.widthProperty());
         pane.prefHeightProperty().bind(scrollPane.heightProperty());
         pane.prefWidthProperty().bind(scrollPane.widthProperty());
-
     }
     private void setupListenerOnTextField(){
         coord.textProperty().addListener((observableValue, s, t1) -> {

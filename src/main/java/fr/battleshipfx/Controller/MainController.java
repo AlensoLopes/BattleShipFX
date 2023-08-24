@@ -17,9 +17,8 @@ import java.util.ResourceBundle;
 
 public class MainController implements Initializable {
 
-    @FXML
-    private TextField pseudo;
-    @FXML private Button jouer;
+    @FXML private TextField pseudo;
+    @FXML private Button bot;
 
 
     private static String pseudonyme;
@@ -37,8 +36,15 @@ public class MainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gameController.setController(this);
 
-        jouer.disableProperty().bind(pseudo.textProperty().isEmpty());
-        jouer.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
+        bot.disableProperty().bind(pseudo.textProperty().isEmpty());
+        addEventHandler(bot);
+    }
+
+    public static String getPseudonyme() {
+        return pseudonyme;
+    }
+    private void addEventHandler(Button button){
+        button.addEventHandler(MouseEvent.MOUSE_CLICKED, event ->{
             pseudonyme = pseudo.getText();
             FXMLLoader fxmlLoader = new FXMLLoader(BattleShip.class.getResource("Game.fxml"));
             try {
@@ -47,10 +53,5 @@ public class MainController implements Initializable {
                 throw new RuntimeException(e);
             }
         } );
-
-    }
-
-    public static String getPseudonyme() {
-        return pseudonyme;
     }
 }
