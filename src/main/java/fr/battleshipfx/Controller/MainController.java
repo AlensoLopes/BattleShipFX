@@ -5,10 +5,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -48,10 +50,23 @@ public class MainController implements Initializable {
             pseudonyme = pseudo.getText();
             FXMLLoader fxmlLoader = new FXMLLoader(BattleShip.class.getResource("Game.fxml"));
             try {
+                stage.setHeight(600);
+                stage.setWidth(800);
+
+                stage.setX(MainController.centerScene(stage)[0]);
+                stage.setY(MainController.centerScene(stage)[1]);
+
                 stage.getScene().setRoot(fxmlLoader.load());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } );
+    }
+
+    public static double[] centerScene(Stage stage){
+        Rectangle2D bound = Screen.getPrimary().getVisualBounds();
+        double x = (bound.getWidth() - stage.getWidth()) / 2;
+        double y = (bound.getHeight() - stage.getHeight()) / 2;
+        return new double[]{x,y};
     }
 }

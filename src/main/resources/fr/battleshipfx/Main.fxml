@@ -5,11 +5,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
-      prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <Text layoutX="141.0" layoutY="158.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonyme"/>
-   <TextField fx:id="pseudo" layoutX="225.0" layoutY="141.0"/>
-   <Text layoutX="263.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BattleShip"
-         wrappingWidth="74.22589111328125"/>
-   <Button fx:id="bot" layoutX="218.0" layoutY="213.0" mnemonicParsing="false" text="Jouer : Bot"/>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <Text layoutX="57.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pseudonyme" />
+   <TextField fx:id="pseudo" layoutX="141.0" layoutY="101.0" />
+   <Text layoutX="163.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="BattleShip" wrappingWidth="74.22589111328125" />
+   <Button fx:id="bot" layoutX="89.0" layoutY="172.0" mnemonicParsing="false" text="Jouer : Bot" />
 </Pane>
