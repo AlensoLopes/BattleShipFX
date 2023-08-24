@@ -37,7 +37,6 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gameController.setController(this);
-
         bot.disableProperty().bind(pseudo.textProperty().isEmpty());
         addEventHandler(bot);
     }

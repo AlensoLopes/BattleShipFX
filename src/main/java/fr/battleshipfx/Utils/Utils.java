@@ -5,6 +5,9 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 
 public class Utils {
 
@@ -27,5 +30,16 @@ public class Utils {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getMacAdress(InetAddress address) throws SocketException {
+        NetworkInterface networkInterface = NetworkInterface.getByInetAddress(address);
+        byte[] mac = networkInterface.getHardwareAddress();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < mac.length; i++) {
+            stringBuilder.append(String.format("%02X%s", mac[i], (i < mac.length -1) ? "-" : ""));
+        }
+
+        return stringBuilder.toString();
     }
 }
