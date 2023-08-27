@@ -2,6 +2,8 @@ module fr.battleship.battleshipfx {
     requires javafx.controls;
     requires javafx.fxml;
     requires mysql.connector.j;
+    requires java.sql;
+    requires org.json;
 
 
     opens fr.battleshipfx to javafx.fxml;
