@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class Utils {
 
@@ -41,5 +42,9 @@ public class Utils {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static void main(String[] args) throws UnknownHostException, SocketException {
+        System.out.println(getMacAdress(InetAddress.getLocalHost()));
     }
 }
