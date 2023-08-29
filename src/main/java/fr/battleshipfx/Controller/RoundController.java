@@ -1,6 +1,8 @@
 package fr.battleshipfx.Controller;
 
+import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
+import fr.battleshipfx.Database.GameDatabase;
 import javafx.scene.control.Label;
 
 public class RoundController {
@@ -60,6 +62,7 @@ public class RoundController {
         gameController.validation.disableProperty().unbind();
         gameController.validation.setDisable(true);
         gameController.coord.setDisable(true);
+        GameDatabase.insertGameInformation(gameController.nb_round, new int[]{PlayerHuman.getNbShipAlive(gameController.board_bot), PlayerHuman.getNbShipAlive(GameController.board_game)});
         gameController.replay(MainController.stage);
     }
 

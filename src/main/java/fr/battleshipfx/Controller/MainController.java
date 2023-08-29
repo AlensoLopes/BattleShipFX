@@ -1,6 +1,7 @@
 package fr.battleshipfx.Controller;
 
 import fr.battleshipfx.BattleShip;
+import fr.battleshipfx.Database.UserDatabase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -54,7 +55,7 @@ public class MainController implements Initializable {
 
                 stage.setX(MainController.centerScene(stage)[0]);
                 stage.setY(MainController.centerScene(stage)[1]);
-
+                //UserDatabase.insertUser(pseudonyme);
                 stage.getScene().setRoot(fxmlLoader.load());
             } catch (IOException e) {
                 throw new RuntimeException(e);

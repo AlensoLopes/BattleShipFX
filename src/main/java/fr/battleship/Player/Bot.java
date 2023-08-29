@@ -15,6 +15,7 @@ public class Bot extends Player {
     public ArrayList<Integer> botHit = new ArrayList<>();
     public int[] coordHit = new int[2];
     protected String playerName;
+    private int nbShipAlive = 4;
 
     public Bot() {
         setPlayerName();
