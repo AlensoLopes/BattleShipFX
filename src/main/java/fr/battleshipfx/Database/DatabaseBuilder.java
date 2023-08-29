@@ -62,4 +62,7 @@ public class DatabaseBuilder {
             throw new RuntimeException(e);
         }
     }
+    protected PreparedStatement preparedStatement(String query) throws SQLException {
+        return new DatabaseBuilder().makeConnection().prepareStatement(query);
+    }
 }

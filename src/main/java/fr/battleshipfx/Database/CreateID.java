@@ -79,5 +79,6 @@ public class CreateID extends DatabaseBuilder{
     public static void main(String[] args) {
         createUUIDForPlayer();
         System.out.println(getUUID());
+
     }
 }
