@@ -1,23 +1,15 @@
 package fr.battleshipfx.Database;
 
-import com.mysql.cj.util.StringUtils;
 import fr.battleshipfx.Utils.Utils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.sql.*;
 import java.util.UUID;
 
-public class CreateID {
+public class CreateID extends DatabaseBuilder{
 
-    private final String jsonFileLink = "src/main/resources/fr/battleshipfx/json/settings.json";
+    protected final String jsonFileLink = "src/main/resources/fr/battleshipfx/json/settings.json";
 
     public static void createUUIDForPlayer(){
         CreateID createID = new CreateID();
@@ -44,25 +36,6 @@ public class CreateID {
 
     }
 
-    private String[] getDatabaseConnection(){
-        InputStream is;
-        try{
-            is = new FileInputStream(jsonFileLink);
-        }catch (FileNotFoundException e){
-            throw new RuntimeException(e);
-        }
-
-        JSONObject object= new JSONObject(new JSONTokener(is));
-        JSONArray information = object.getJSONArray("database");
-
-        String[] array = new String[information.length()];
-        for (int i = 0; i < array.length; i++) {
-            array[i] = String.valueOf(information.get(i)).replaceAll("\"", "")
-                    .replaceAll("}", "").replaceAll("\\{", "");
-        }
-        return array;
-    }
-
     private UUID generateID(String macAddress){
         if(isMacAddressAlreadyLinked(macAddress)) return null;
         return UUID.randomUUID();
@@ -84,37 +57,27 @@ public class CreateID {
         return true;
     }
 
-    private void closeConnection(Connection connection, Statement statement, ResultSet resultSet){
-        try {
-            if(connection != null) connection.close();
-            if(statement != null) statement.close();
-            if(resultSet != null) resultSet.close();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
 
-    }
-    private Connection makeConnection(){
-        try {
-            return DriverManager.getConnection(getDatabaseConnection()[0].split("url:")[1],
-                    getDatabaseConnection()[1].split(":")[1], getDatabaseConnection()[2].split(":")[1]);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private int countColumn(ResultSet resultSet, String id){
-        try {
+    public static String getUUID(){
+        final CreateID createID = new CreateID();
+        final String macAddress;
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection connection = createID.makeConnection();
+            macAddress = Utils.getMacAdress(InetAddress.getLocalHost());
+            String query = "select bs_id as uuid from bs_mac_id where mac_address = '" + macAddress + "'";
+            ResultSet resultSet = createID.prepareStatement(connection, query);
             resultSet.next();
-            return resultSet.getInt(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return resultSet.getString("uuid");
+        }catch (ClassNotFoundException | SocketException | UnknownHostException | SQLException e){
+            System.err.println("An error occurred, the uuid may not exist or the mac address may not be found. " +
+                    "Please try again.");
+            return null;
         }
     }
-    private ResultSet prepareStatement(Connection connection, String query){
-        try {
-            return connection.createStatement().executeQuery(query);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+
+    public static void main(String[] args) {
+        createUUIDForPlayer();
+        System.out.println(getUUID());
     }
 }
