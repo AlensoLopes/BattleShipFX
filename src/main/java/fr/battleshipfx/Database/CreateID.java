@@ -1,15 +1,13 @@
 package fr.battleshipfx.Database;
 
 import fr.battleshipfx.Utils.Utils;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
+
+import java.net.*;
 import java.sql.*;
 import java.util.UUID;
 
 public class CreateID extends DatabaseBuilder{
 
-    protected final String jsonFileLink = "src/main/resources/fr/battleshipfx/json/settings.json";
 
     public static void createUUIDForPlayer(){
         CreateID createID = new CreateID();

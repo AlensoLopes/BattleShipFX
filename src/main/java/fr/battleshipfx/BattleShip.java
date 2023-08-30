@@ -31,7 +31,7 @@ public class BattleShip extends Application {
     *  VIEW STATS
     * */
 
-    public static void main(String[] args) {
+    public static void launchApp(){
         launch();
     }
 }

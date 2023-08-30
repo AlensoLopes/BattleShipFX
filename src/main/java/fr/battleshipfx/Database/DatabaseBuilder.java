@@ -1,21 +1,23 @@
 package fr.battleshipfx.Database;
 
+import fr.battleshipfx.BattleShip;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.*;
 
 public class DatabaseBuilder {
 
+
+
     private String[] getDatabaseConnection(){
         InputStream is;
         try{
-            is = new FileInputStream(new CreateID().jsonFileLink);
+            is = new FileInputStream("D:\\Project\\Java\\BattleShipFX\\src\\main\\resources\\fr\\battleshipfx\\json\\settings.json");
         }catch (FileNotFoundException e){
+            System.out.println(BattleShip.class.getResourceAsStream("json/settings.json"));
             throw new RuntimeException(e);
         }
 
