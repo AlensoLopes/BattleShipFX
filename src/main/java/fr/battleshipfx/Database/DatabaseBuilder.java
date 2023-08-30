@@ -15,10 +15,9 @@ public class DatabaseBuilder {
     private String[] getDatabaseConnection(){
         InputStream is;
         try{
-            is = new FileInputStream("D:\\Project\\Java\\BattleShipFX\\src\\main\\resources\\fr\\battleshipfx\\json\\settings.json");
+            is = new FileInputStream(String.valueOf(BattleShip.class.getResource("json/settings.json")));
         }catch (FileNotFoundException e){
-            System.out.println(BattleShip.class.getResourceAsStream("json/settings.json"));
-            throw new RuntimeException(e);
+            return new String[]{"url:jdbc:mysql://localhost:3306/bdd_battleship", "username:admin", "password:admin"};
         }
 
         JSONObject object= new JSONObject(new JSONTokener(is));
