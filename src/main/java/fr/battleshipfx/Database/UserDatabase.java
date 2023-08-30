@@ -9,7 +9,7 @@ public class UserDatabase extends DatabaseBuilder{
         GameDatabase gameDatabase = new GameDatabase();
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String query = "insert into bs_user values ('" + CreateID.getUUID() + "', '" + pseudo + "')";
+            String query = "insert into bs_user(bs_id, bs_pseudo) values ('" + CreateID.getUUID() + "', '" + pseudo + "')";
             PreparedStatement preparedStatement = gameDatabase.preparedStatement(query);
             int rows = preparedStatement.executeUpdate();
             if(rows == 0) System.out.println("good");

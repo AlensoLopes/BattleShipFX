@@ -13,6 +13,8 @@ import java.util.Scanner;
 public class PlayerHuman extends Player{
     public static int[] entireShip = new int[2];
 
+    public static final String[][] size_b = new String[][]{{"1", "■"}, {"2","▄"},{"3","▀"}, {"4", "█"}};
+
     public PlayerHuman() {
     }
 
@@ -43,6 +45,24 @@ public class PlayerHuman extends Player{
             }
         }
         return nbShipAlive;
+    }
+
+    public static int getShipAlive(String[][] board){
+        int[] boat = new int[]{0, 0, 0, 0};
+        int alive = 0;
+        for (int i = 0; i < CreateBoard.DIM; i++) {
+            for (int j = 0; j < CreateBoard.DIM; j++) {
+                if(board[i][j].equals(size_b[0][1])) boat[0]++;
+                else if(board[i][j].equals(size_b[1][1])) boat[1]++;
+                else if(board[i][j].equals(size_b[2][1])) boat[2]++;
+                else if(board[i][j].equals(size_b[3][1])) boat[3]++;
+            }
+        }
+
+        for (int j : boat) {
+            if (j != 0) alive++;
+        }
+        return alive;
     }
 
     @Override

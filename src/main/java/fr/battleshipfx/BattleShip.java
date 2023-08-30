@@ -1,6 +1,7 @@
 package fr.battleshipfx;
 
 import fr.battleshipfx.Controller.MainController;
+import fr.battleshipfx.Database.CreateID;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ public class BattleShip extends Application {
         stage.setTitle("BattleShip");
         stage.setScene(scene);
         stage.setResizable(false);
+        CreateID.createUUIDForPlayer();
         stage.show();
     }
 

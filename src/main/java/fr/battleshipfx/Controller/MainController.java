@@ -55,7 +55,7 @@ public class MainController implements Initializable {
 
                 stage.setX(MainController.centerScene(stage)[0]);
                 stage.setY(MainController.centerScene(stage)[1]);
-                //UserDatabase.insertUser(pseudonyme);
+                UserDatabase.insertUser(pseudonyme);
                 stage.getScene().setRoot(fxmlLoader.load());
             } catch (IOException e) {
                 throw new RuntimeException(e);

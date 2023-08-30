@@ -62,7 +62,9 @@ public class RoundController {
         gameController.validation.disableProperty().unbind();
         gameController.validation.setDisable(true);
         gameController.coord.setDisable(true);
-        GameDatabase.insertGameInformation(gameController.nb_round, new int[]{PlayerHuman.getNbShipAlive(gameController.board_bot), PlayerHuman.getNbShipAlive(GameController.board_game)});
+        GameDatabase.insertGameInformation(gameController.nb_round, new int[]{
+                PlayerHuman.getShipAlive(gameController.board_bot),
+                PlayerHuman.getShipAlive(GameController.board_game)});
         gameController.replay(MainController.stage);
     }
 

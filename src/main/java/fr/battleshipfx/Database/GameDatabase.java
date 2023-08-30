@@ -31,8 +31,8 @@ public class GameDatabase extends DatabaseBuilder{
 
     public String[] getGameInformation(int numberRound, int[] nbBoat){
         return new String[]{CreateID.getUUID(), getDate().split("T")[0].replaceAll("-", "/"),
-                String.valueOf(numberRound), String.valueOf(nbBoat[1]),
-                String.valueOf(nbBoat[0]), getWinner()};
+                String.valueOf(numberRound), String.valueOf(nbBoat[0]),
+                String.valueOf(nbBoat[1]), getWinner()};
     }
 
     private String getDate(){
