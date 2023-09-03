@@ -39,7 +39,7 @@ In this version of the game, players are pitted against a bot. The game features
    cd battleshipfx
    ```
 
-3. **Database Configuration:**
+3. **Database Configuration: (Optional)**
    - Modify the `settings.json` file with your MySQL database credentials.
    - Modify in DatabaseBuilder class line 20 : url, username, password -> Need to keep the tag "url:, username:, password:" 
 
