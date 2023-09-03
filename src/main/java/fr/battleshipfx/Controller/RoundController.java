@@ -3,7 +3,12 @@ package fr.battleshipfx.Controller;
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
 import fr.battleshipfx.Database.GameDatabase;
+import fr.battleshipfx.Utils.Utils;
 import javafx.scene.control.Label;
+
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class RoundController {
 
@@ -13,7 +18,6 @@ public class RoundController {
     protected int placeShipAndDisplay(String[] coordo){
         if(coordo == null) return 0;
         if(!gameController.historyController.addHistoryOnError(coordo, "unplaced boat")) return -1;
-        gameController.displayBoard.displayBoard(GameController.board_game);
 
         gameController.historyController.addHistoryOnPlace(coordo);
 
@@ -62,9 +66,15 @@ public class RoundController {
         gameController.validation.disableProperty().unbind();
         gameController.validation.setDisable(true);
         gameController.coord.setDisable(true);
-        GameDatabase.insertGameInformation(gameController.nb_round, new int[]{
-                PlayerHuman.getShipAlive(gameController.board_bot),
-                PlayerHuman.getShipAlive(GameController.board_game)});
+        try {
+            if(Utils.getMacAdress(InetAddress.getLocalHost()) != null){
+                GameDatabase.insertGameInformation(gameController.nb_round, new int[]{
+                        PlayerHuman.getShipAlive(gameController.board_bot),
+                        PlayerHuman.getShipAlive(GameController.board_game)});
+            }
+        } catch (SocketException | UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
         gameController.replay(MainController.stage);
     }
 

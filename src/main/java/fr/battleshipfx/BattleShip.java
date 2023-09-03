@@ -2,13 +2,16 @@ package fr.battleshipfx;
 
 import fr.battleshipfx.Controller.MainController;
 import fr.battleshipfx.Database.CreateID;
+import fr.battleshipfx.Utils.Utils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Objects;
 
 public class BattleShip extends Application {
@@ -23,8 +26,15 @@ public class BattleShip extends Application {
         stage.setResizable(false);
         stage.getIcons().add(new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("icon/world-war-two-battleship-cartoon-aloysius-patrimonio.jpg"))));
-        CreateID.createUUIDForPlayer();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+
+        if(Utils.getMacAdress(InetAddress.getLocalHost()) != null) CreateID.createUUIDForPlayer();
+        else{
+            alert.setHeaderText("Error with database");
+            alert.setContentText("An error with the database occurred, your game will not be save in the db");
+        }
         stage.show();
+        alert.showAndWait();
     }
 
     /*TODO

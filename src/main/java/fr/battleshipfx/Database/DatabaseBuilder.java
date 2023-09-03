@@ -15,9 +15,9 @@ public class DatabaseBuilder {
     private String[] getDatabaseConnection(){
         InputStream is;
         try{
-            is = new FileInputStream(String.valueOf(BattleShip.class.getResource("json/settings.json")));
+            is = new FileInputStream(String.valueOf(BattleShip.class.getResourceAsStream("json/settings.json")));
         }catch (FileNotFoundException e){
-            return new String[]{"url:jdbc:mysql://localhost:3306/bdd_battleship", "username:admin", "password:admin"};
+            return null;
         }
 
         JSONObject object= new JSONObject(new JSONTokener(is));
@@ -44,8 +44,8 @@ public class DatabaseBuilder {
         try {
             return DriverManager.getConnection(getDatabaseConnection()[0].split("url:")[1],
                     getDatabaseConnection()[1].split(":")[1], getDatabaseConnection()[2].split(":")[1]);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        } catch (SQLException | NullPointerException e) {
+            return null;
         }
     }
     protected int countColumn(ResultSet resultSet, String id){
