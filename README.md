@@ -82,7 +82,7 @@ This project can be extended in several ways:
 
 ## Credits
 
-This game was developed by [Alenso Lopes]. Feel free to contact me at [alenso.lopes@unicaen.fr] for any inquiries or feedback.
+This game was developed by Alenso Lopes. Feel free to contact me at alenso.lopes@unicaen.fr for any inquiries or feedback.
 
 ---
 
