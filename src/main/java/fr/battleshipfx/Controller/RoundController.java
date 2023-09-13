@@ -2,6 +2,7 @@ package fr.battleshipfx.Controller;
 
 import fr.battleship.Player.PlayerHuman;
 import fr.battleship.Win.Win;
+import fr.battleshipfx.Database.DatabaseBuilder;
 import fr.battleshipfx.Database.GameDatabase;
 import fr.battleshipfx.Utils.Utils;
 import javafx.scene.control.Label;
@@ -67,7 +68,7 @@ public class RoundController {
         gameController.validation.setDisable(true);
         gameController.coord.setDisable(true);
         try {
-            if(Utils.getMacAdress(InetAddress.getLocalHost()) != null){
+            if(Utils.getMacAdress(InetAddress.getLocalHost()) != null && !DatabaseBuilder.isConnectionEnable()){
                 GameDatabase.insertGameInformation(gameController.nb_round, new int[]{
                         PlayerHuman.getShipAlive(gameController.board_bot),
                         PlayerHuman.getShipAlive(GameController.board_game)});

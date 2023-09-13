@@ -1,6 +1,7 @@
 package fr.battleshipfx.Controller;
 
 import fr.battleshipfx.BattleShip;
+import fr.battleshipfx.Database.DatabaseBuilder;
 import fr.battleshipfx.Database.UserDatabase;
 import fr.battleshipfx.Utils.Utils;
 import javafx.fxml.FXML;
@@ -57,7 +58,8 @@ public class MainController implements Initializable {
 
                 stage.setX(MainController.centerScene(stage)[0]);
                 stage.setY(MainController.centerScene(stage)[1]);
-                if(Utils.getMacAdress(InetAddress.getLocalHost()) != null) UserDatabase.insertUser(pseudonyme);
+                if (Utils.getMacAdress(InetAddress.getLocalHost()) != null
+                    && !DatabaseBuilder.isConnectionEnable()) UserDatabase.insertUser(pseudonyme);
                 stage.getScene().setRoot(fxmlLoader.load());
             } catch (IOException e) {
                 throw new RuntimeException(e);

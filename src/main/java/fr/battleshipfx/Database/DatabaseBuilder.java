@@ -10,8 +10,6 @@ import java.sql.*;
 
 public class DatabaseBuilder {
 
-
-
     private String[] getDatabaseConnection(){
         InputStream is;
         try{
@@ -65,5 +63,9 @@ public class DatabaseBuilder {
     }
     protected PreparedStatement preparedStatement(String query) throws SQLException {
         return new DatabaseBuilder().makeConnection().prepareStatement(query);
+    }
+
+    public static boolean isConnectionEnable(){
+        return new DatabaseBuilder().makeConnection() == null;
     }
 }
