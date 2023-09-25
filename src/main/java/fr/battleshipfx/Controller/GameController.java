@@ -152,7 +152,7 @@ public class GameController implements Initializable {
                 else res = dialog.showAndWait();
             }
         }
-        return dialog.getEditor().getText();
+        return dialog.getEditor().getText().toUpperCase();
     }
 
     protected void startGame(){

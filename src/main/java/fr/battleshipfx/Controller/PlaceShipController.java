@@ -35,7 +35,6 @@ public class PlaceShipController {
         int[] coord = Utils.processCoordinate(controller.coord);
 
         if(coord == null || coord[0] < 0 || coord[0] > 9 || coord[1] < 0 || coord[1] > 9) return new String[]{null};
-        System.out.println(getAxis());
         if(getAxis() == null && boatPlaced[0]) return new String[]{null};
 
         int size = placeBoat(coord, searchWhichBoatNeedToBePlaced(), getAxis());
